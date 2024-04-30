@@ -7,35 +7,35 @@ import MyLibraryPage from "../pages/MyLibraryPage";
 import ReportPage from "../pages/ReportPage";
 
 
-const router = createBrowserRouter([
+const router = [
 
     
       {
         path: "/",
-        element: <HomePage />,
+        page: HomePage 
       },
       {
         path: "/login",
-        element: <LoginPage />,
+        page: LoginPage
       },
       {
         path: "/register",
-        element: <RegisterPage />,
+        page: RegisterPage 
       },
       {
         path: "/admin",
-        element: <AdminPage/>,
+        page: AdminPage
       },
       {
         path: "/admin/my-library/createdByMe",
-        element: <MyLibraryPage/>,
+        page: MyLibraryPage
       },
       {
         path: "/admin/report",
-        element: <ReportPage/>,
+        page: ReportPage
       },
       
     
    
-  ]);
+  ];
   export default router;

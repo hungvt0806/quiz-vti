@@ -1,17 +1,28 @@
-import {BrowserRouter as Router, RouterProvider,Route,Switch } from 'react-router-dom';
+import {BrowserRouter as Router, RouterProvider,Route,Switch, Routes } from 'react-router-dom';
 import './App.css';
 import router from './routers'
-import AppReducer from './reducers/AppReducer';
-import { useReducer } from 'react';
+
 
 
 function App() {
-  const initialState = {user: null, post:[]};
-  const [state,dispatch] = useReducer(AppReducer,initialState);
+ 
+
 
   return (
     <>
-    <RouterProvider router={router} />
+    <Router>
+      <Routes>
+        {
+          router.map((route)=>{
+            const Page = route.page
+            return (
+              <Route key={route.path} path={route.path} element = {<Page/>}/>
+            )
+          })
+        }
+            
+      </Routes>
+    </Router>
     </>
   );
 }
