@@ -12,7 +12,7 @@ const Login = () => {
        
         <div className="inputBox">
         <input type="text" required="required" />
-        <i> <MailOutlined /></i>
+        <i className="fa-regular fa-envelope"></i>
         <span>email</span>
       </div>
         <div className="inputBox">
