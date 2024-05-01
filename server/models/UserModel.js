@@ -9,11 +9,7 @@ const userSchema = new mongoose.Schema({
                  minlength: [6,'Password must be at least 6 characters']},
     isAdmin:{type: Boolean, default: false, required: false},
     access_token:{type: String, required: false},
-    refresh_token:{type: String, required: false},
-    history:  [{ quiz: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
-    score: { type: Number, default: 0 }
-}]
-    
+    refresh_token:{type: String, required: false}
 },{timestamps: true})
 
 
