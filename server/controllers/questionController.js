@@ -23,6 +23,10 @@ exports.createOneQuestion = async (req,res,next)=>{
     try{
         const {quizId} = req.params;
 
+        if (!quizId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
+        }
+
         const question = await Question.create({...req.body,quizId:quizId});
     
         res.status(200).json({
@@ -44,6 +48,10 @@ exports.updateOneQuestion = async (req,res,next)=>{
     try{
         const {questionId } = req.params;
 
+        if (!questionId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing questionId' });
+        }
+
         const question = await Question.findByIdAndUpdate(questionId,{...req.body},{new: true, runValidator: true});
     
         res.status(200).json({
@@ -64,6 +72,10 @@ exports.updateOneQuestion = async (req,res,next)=>{
 exports.deleteOneQuestion = async (req,res,next)=>{
     try{
         const { questionId } = req.params;
+
+        if (!questionId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing questionId' });
+        }
 
         await Question.findByIdAndDelete(questionId);
     

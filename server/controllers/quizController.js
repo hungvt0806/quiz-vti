@@ -45,6 +45,10 @@ exports.updateOneQuiz = async (req,res,next)=>{
     try{
         const {quizId} = req.params;
 
+        if (!quizId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
+        }
+
         const quiz = await Quiz.findByIdAndUpdate(quizId,{...req.body},{new: true, runValidator: true});
     
         res.status(200).json({
@@ -65,6 +69,10 @@ exports.updateOneQuiz = async (req,res,next)=>{
 exports.deleteOneQuiz = async (req,res,next)=>{
     try{
         const {quizId} = req.params;
+
+        if (!quizId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
+        }
 
         await Question.deleteMany({ quizId });
         await Quiz.findByIdAndDelete(quizId);
