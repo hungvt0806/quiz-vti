@@ -28,7 +28,7 @@ exports.register = async (req,res,next) => {
         console.log('isCheckEmail', isCheckEmail)
         const user = await User.create(req.body);
         const token = jwt.sign({userId : user._id},process.env.APP_SECRET);
-        return res.status(200).json({
+        return res.json({
             status: 'success',
             data:{token,userName: user.name}
         })
@@ -49,10 +49,12 @@ exports.login = async (req,res,next) => {
         }
         if (bcrypt.compareSync(req.body.password,user.password)){
             const token = jwt.sign({userId : user._id},process.env.APP_SECRET);
-            res.status(200).json({
+             return res.json({
                 status : 'success',
                 data: {
-                    token,userName: user.name
+                    token,
+                    userName: user.name,
+                    role:user.isAdmin
                 }
             })
         }else {

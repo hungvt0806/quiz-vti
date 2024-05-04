@@ -1,41 +1,31 @@
-import { Link, Outlet, createBrowserRouter } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
+import React from "react";
 import HomePage from "../pages/HomePage";
 import AdminPage from "../pages/AdminPage";
 import MyLibraryPage from "../pages/MyLibraryPage";
 import ReportPage from "../pages/ReportPage";
+import LoginRegisterPage from "../pages/LoginRegisterPage";
+import SettingPage from "../pages/SettingPage";
 
 
 const router = [
+  {
+    path: "/", 
+   page: HomePage },
+   {
+    path: "/login", 
+   page: LoginRegisterPage },
+  {
+     path: "/admin", 
+    page: AdminPage  },
+  {
+    path: "/createdByMe", 
+    page: MyLibraryPage  },
+  {
+    path: "/Report", 
+    page: ReportPage  },
+    {
+      path: "/setting", 
+     page: SettingPage  },
+];
 
-    
-      {
-        path: "/",
-        page: HomePage 
-      },
-      {
-        path: "/login",
-        page: LoginPage
-      },
-      {
-        path: "/register",
-        page: RegisterPage 
-      },
-      {
-        path: "/admin",
-        page: AdminPage
-      },
-      {
-        path: "/admin/my-library/createdByMe",
-        page: MyLibraryPage
-      },
-      {
-        path: "/admin/report",
-        page: ReportPage
-      },
-      
-    
-   
-  ];
-  export default router;
+export default router;

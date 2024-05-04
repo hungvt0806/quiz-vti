@@ -1,6 +1,8 @@
 import React from 'react'
 import Navbar from '../../components/Navbar';
-import MyExplore from '../../components/MyExplore';
+import { Outlet } from 'react-router';
+import './style.css'
+
 
 const HomePage = () => {
   return (
@@ -8,7 +10,7 @@ const HomePage = () => {
     <div className='w-full h-full'>
    <Navbar/>
    <div className='w-full h-[calc(100vh-50px)]'>
-    <MyExplore/>
+    <Outlet/>
     </div>
     </div>
 

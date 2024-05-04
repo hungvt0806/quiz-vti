@@ -14,15 +14,11 @@ const Navbar = () => {
         </div>
         <div className='flex items-center'>
         <Link to="/login">
-        <Button type="primary" className='mr-4 bg-purple-600 w-[100px]'>
+        <Button type="primary" className='mr-4 bg-purple-600 w-[100px]' >
           Login
         </Button>
       </Link>
-      <Link to="/register">
-      <Button type="primary" className='bg-purple-600 w-[100px] mr-10'>
-        Sign up
-      </Button>
-      </Link>
+      
     </div>
       </div>
     </div>
@@ -30,3 +26,6 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+
+

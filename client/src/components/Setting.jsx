@@ -1,9 +1,11 @@
 import React from 'react'
 
-export default function Report() {
+const Setting = () => {
   return (
     <div className='h-full w-full bg-gray-100 flex items-center justify-center'>
-      <h1>Report page</h1>
+      <h1>Setting Page</h1>
     </div>
   )
 }
+
+export default Setting;
