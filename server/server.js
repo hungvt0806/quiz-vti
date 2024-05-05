@@ -13,6 +13,8 @@ const quizRoute = require('./routes/quizRoute');
 const questionRoute = require('./routes/questionRoute');
 
 const { register } = require('./controllers/authController');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
 
@@ -26,6 +28,29 @@ app.use(express.json());
 app.use('/api/v1/auth',authRoute);
 app.use('/api/v1/quizzes',quizRoute);
 app.use('/api/v1/questions',questionRoute);
+
+//Image Storage Engine
+const storage = multer.diskStorage({
+    destination: './upload/images',
+    filename:(req,file,cb)=>{
+        return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    }
+})
+
+const upload = multer({storage:storage})
+
+//Creating upload Endpoint for image
+app.use('/images',express.static('upload/images'))
+
+app.post("/upload",upload.single('avatar'),(req,res)=>{
+
+    res.json({
+        success: 1,
+        image_url:`http://localhost:${port}/images/${req.file.filename}`
+    })
+})
+
+    
 
 const port = process.env.APP_PORT;
 

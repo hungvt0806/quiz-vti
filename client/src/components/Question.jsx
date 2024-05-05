@@ -53,7 +53,7 @@ getAllQuestions();
           </div>
           <button className="bg-purple-500 hover:bg-purple-900 text-white py-1 px-2 rounded ml-auto inline-flex items-center">
               <FaPencilAlt className="mr-1" />
-              <span>Chỉnh sửa</span>
+              
           </button>
         </div>
         <div className="text-2xl mb-1 w-full relative">

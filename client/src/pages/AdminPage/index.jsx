@@ -8,7 +8,7 @@ import { Outlet } from 'react-router-dom';
 const AdminPage = () => {
   return (
     
-    <div className='w-full h-full flex '>
+    <div className='w-full h-[100vh] flex '>
      <MySidebar/>
      <div className='w-full h-full'>
     <MyHeader/>

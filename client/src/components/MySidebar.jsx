@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import avatarUser from '../assets/avatarUser.png';
 import logo from '../assets/logo.png';
 import { TinyColor } from '@ctrl/tinycolor';
-import { Button, ConfigProvider, Space } from 'antd';
+import { Button, ConfigProvider } from 'antd';
 import { BankOutlined, CameraOutlined,  FormOutlined, LogoutOutlined, MonitorOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 
 const colors2 = ['#fc6076', '#ff9a44', '#ef9d43', '#e75516'];
@@ -42,7 +42,7 @@ const MySidebar = () => {
                 <img src={avatarUser} alt="Jack" className="rounded-full w-24 h-24 mr-0" />
                 <CameraOutlined className='mb-4 ml-0'/>
                 </div>
-
+                <Button type="primary" className='w-15 h-7 text-center'>Upload</Button>
                     <h5 className='text-xl font-medium leading-tight mb-2'>{username}</h5>
                     <p className='text-gray-600'>{role =="true"?'Admin':'User'}</p>
                 </div>

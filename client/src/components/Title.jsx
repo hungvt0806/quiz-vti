@@ -13,7 +13,7 @@ const Title = (getData) => {
 
 
   return (
-    <div className ="relative flex  w-full flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+    <div className ="relative flex  w-full flex-col rounded-xl bg-yellow-200 bg-clip-border text-gray-700 shadow-md">
   <div className='flex-col flex '>
         <div className='flex items-center  flex-col'>
           <div className='flex items-end'>
