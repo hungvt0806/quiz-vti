@@ -4,7 +4,7 @@ import avatarUser from '../assets/avatarUser.png';
 import logo from '../assets/logo.png';
 import { TinyColor } from '@ctrl/tinycolor';
 import { Button, ConfigProvider, Space } from 'antd';
-import { BankOutlined, FormOutlined, LogoutOutlined, MonitorOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { BankOutlined, CameraOutlined,  FormOutlined, LogoutOutlined, MonitorOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 
 const colors2 = ['#fc6076', '#ff9a44', '#ef9d43', '#e75516'];
 
@@ -26,6 +26,7 @@ const MySidebar = () => {
     setRole(storageRole);
   }, []);
 
+  
   return (
     <div className='h-screen w-[300px] bg-gray-800'>
       <div className='bg-white h-[50px]'>
@@ -37,7 +38,10 @@ const MySidebar = () => {
         <div className='menu-man text-left whitespace-nowrap'>
             <div className='profile flex justify-center items-center text-center p-5'>
                 <div className='text-center'>
-                <img src={avatarUser} alt="Jack" className="rounded-full w-24 h-24" />
+                  <div className='flex items-end'>
+                <img src={avatarUser} alt="Jack" className="rounded-full w-24 h-24 mr-0" />
+                <CameraOutlined className='mb-4 ml-0'/>
+                </div>
 
                     <h5 className='text-xl font-medium leading-tight mb-2'>{username}</h5>
                     <p className='text-gray-600'>{role =="true"?'Admin':'User'}</p>
@@ -78,7 +82,7 @@ const MySidebar = () => {
             <div className="py-3  cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300">
                 <Link to="/admin/createdByMe" className="px-7 flex space-x-2">
                 <BankOutlined />
-                <span>My Library</span>
+                <span >My Library</span>
                 </Link>
             </div>
 

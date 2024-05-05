@@ -2,18 +2,17 @@ import React from 'react';
 import MyHeader from '../../components/MyHeader';
 import MySidebar from '../../components/MySidebar';
 import { Outlet } from 'react-router-dom';
-import MyExplore from '../../components/MyExplore';
 
 
 
 const AdminPage = () => {
   return (
     
-    <div className='w-full h-full flex'>
+    <div className='w-full h-full flex '>
      <MySidebar/>
      <div className='w-full h-full'>
     <MyHeader/>
-    <div className='w-full h-[calc(100vh-50px)]'>
+    <div className='w-full h-[calc(100vh-50px)] '>
     <Outlet/>
      </div>
      </div>

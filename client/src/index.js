@@ -10,6 +10,7 @@ import MyLibrary from './components/MyLibrary';
 import MyExplore from './components/MyExplore';
 import Setting from './components/Setting';
 import Report from './components/Report';
+import QuizDetail from './components/QuizDetail';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -23,6 +24,7 @@ ReactDOM.render(
           <Route path="/admin" element={<AdminPage />}>
             <Route index element={<MyExplore />} />
             <Route path="createdByMe" element={<MyLibrary />} />
+            <Route path="questions" element={<QuizDetail />} />
             <Route path="report" element={<Report />} />
             <Route path="setting" element={<Setting />} />
           </Route>

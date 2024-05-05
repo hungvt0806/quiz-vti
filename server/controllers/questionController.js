@@ -3,7 +3,25 @@ const Question = require('../models/QuestionModel');
 //get all  questions
 exports.getAllQuestions = async (req,res,next)=>{
     try{
-        const questions = await Question.find({}).populate('quizId');
+    
+        const sortBy = req.query.sortBy || '_id'; 
+        const sortOrder = req.query.sortOrder || 'asc';
+
+        let filter = {};
+        // Xử lý các tham số filter từ query string của URL (ví dụ: /api/quizzes?type=languae)
+        if (req.query.quizId) {
+            filter.quizId = req.query.quizId;
+        }
+        const questions = await Question.find(filter)
+        .populate({
+            path: 'quizId',
+            populate: {
+              path: 'author', // Tên trường trong mô hình Quiz tham chiếu tới mô hình User
+              select: 'name' // Chọn các trường bạn muốn lấy từ mô hình User
+            }
+          })
+        .sort({ [sortBy]: sortOrder }) ;
+         
         res.status(200).json({
             status : 'success',
             results: questions.length,
