@@ -30,7 +30,10 @@ exports.register = async (req,res,next) => {
         const token = jwt.sign({userId : user._id},process.env.APP_SECRET);
         return res.json({
             status: 'success',
-            data:{token,userName: user.name}
+            data:{token,
+                userName: user.name,
+                userId:user.userId,
+                avatar:user.avatar}
         })
         
     }catch (error){
@@ -54,7 +57,9 @@ exports.login = async (req,res,next) => {
                 data: {
                     token,
                     userName: user.name,
-                    role:user.isAdmin
+                    userId:user.userId,
+                    role:user.isAdmin,
+                    avatar:user.avatar
                 }
             })
         }else {
@@ -62,6 +67,29 @@ exports.login = async (req,res,next) => {
         }
     }catch (error){
         res.json(error);
+    }
+}
+
+exports.updateUser = async (req, res,next) => {
+    try {
+        const userId = req.params
+        
+
+       
+
+        // Cập nhật thông tin người dùng
+        const updatedUser = await User.findByIdAndUpdate(userId,{...req.body}, { new: true,runValidator: true });
+        
+        return res.status(200).json({
+            status: 'OK',
+            message: 'SUCCESS',
+            data: {updatedUser}
+        })
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: error.message || 'Internal server error'
+    });
     }
 }
 

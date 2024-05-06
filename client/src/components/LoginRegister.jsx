@@ -32,8 +32,13 @@ const LoginRegister = () => {
                 localStorage.setItem('username', JSON.stringify(response.data.data.userName));
                 localStorage.setItem('auth-token', response.data.data.token);
                 localStorage.setItem('role', response.data.data.role);
+                localStorage.setItem('userId', response.data.data.userId);
+                if (response.data.data.avatar) 
+                    localStorage.setItem('avatar', response.data.data.avatar)
+                    else localStorage.setItem('avatar',"none");
+                
 
-                toast.success(response.status);     
+                toast.success("Wellcome");     
                 navigate("/admin");
                 
         

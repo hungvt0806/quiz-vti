@@ -70,7 +70,7 @@ exports.createOneQuiz = async (req,res,next)=>{
 //update one  quiz
 exports.updateOneQuiz = async (req,res,next)=>{
     try{
-        const {quizId} = req.params;
+        const quizId = req.params;
 
         if (!quizId) {
             return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
