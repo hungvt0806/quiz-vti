@@ -23,7 +23,7 @@ export default function MyLibrary() {
     try {
       console.log("getAllQuiz function executed");
       const response = await quizService.getAll({ params: { page: page, limit: PAGE_SIZE }});  
-      console.log("response  la :",response.data.currentPage,page);
+      console.log("response  la :",response.data.data.quizzes,page);
       setAllQuizzes(response.data.data.quizzes);
       setTotalPages(response.data.totalPages);
 } catch (error) {
@@ -58,7 +58,7 @@ getAllQuizzes();
         <p className="font-bold">{quiz.title}</p>
         <div className="flex items-center">
           <MdOutlineQuestionAnswer />
-          <p className='pl-2 pr-10'>{quiz.questions.length} Questions</p>
+          <p className='pl-2 pr-10'>Questions</p>
           <IoLibraryOutline />
           <p className='pl-2'>{quiz.type}</p>
         </div>

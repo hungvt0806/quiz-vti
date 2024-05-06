@@ -29,13 +29,13 @@ const LoginRegister = () => {
                 const response = await authService.login(formData);
                   
                 console.log("response  la :",response.data.data);
-                localStorage.setItem('username', JSON.stringify(response.data.data.userName));
-                localStorage.setItem('auth-token', response.data.data.token);
-                localStorage.setItem('role', response.data.data.role);
-                localStorage.setItem('userId', response.data.data.userId);
-                if (response.data.data.avatar) 
-                    localStorage.setItem('avatar', response.data.data.avatar)
-                    else localStorage.setItem('avatar',"none");
+                localStorage.setItem('userDetail', JSON.stringify(response.data.data));
+                localStorage.setItem('avatar',response.data.data.avatar);
+                // localStorage.setItem('username', JSON.stringify(response.data.data.userName));
+                // localStorage.setItem('auth-token', response.data.data.token);
+                // localStorage.setItem('role', response.data.data.role);
+                // localStorage.setItem('userId', response.data.data.userId);
+                
                 
 
                 toast.success("Wellcome");     
@@ -52,10 +52,11 @@ const LoginRegister = () => {
          try {
             console.log("Sign up function executed",formData);
             const response = await authService.register(formData);
-            console.log("response  la :",response.data.data.userName);
+          
 
-            localStorage.setItem('username', JSON.stringify(response.data.data.userName));
-            localStorage.setItem('auth-token', response.data.data.token);
+            console.log("response  la :",response.data.data);
+            localStorage.setItem('userDetail', JSON.stringify(response.data.data));
+            localStorage.setItem('avatar',response.data.data.avatar);
             toast.success(response.status);  
             navigate("/admin");
              
