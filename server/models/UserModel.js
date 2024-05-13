@@ -2,14 +2,49 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    name: {type: String, unique: true, trim: true, required: [true,'Name must be required']},
-    avatar:{type: String, required: false},
-    email: {type: String, unique: true, trim: true, required: [true,'Email must be required']},
-    password: {type: String, trim: true, required: [true,'Password must be required'],
+    name: {
+        type: String,
+        trim: true,
+        required: [true,'Name must be required']},
+    email: {
+        type: String, 
+        unique: true, 
+        trim: true, 
+        required: [true,'Email must be required']},
+    password: {
+        type: String, 
+        trim: true, 
+        required: [true,'Password must be required'],
                  minlength: [6,'Password must be at least 6 characters']},
-    isAdmin:{type: Boolean, default: false, required: false},
+    avatar:{
+        type: String, 
+        required: false
+    },
+    isAdmin:{
+        type: Boolean, 
+        default: false},
+    likedQuizzes: {
+        type: Array,
+        default: []
+    },
+    deleted: {
+        type: Boolean,
+        default: false
+    },
+    // avatar: {
+    //     type: Object,
+    //     required: false,
+    //     contains: {
+    //         url: {
+    //             type: String
+    //         },
+    //         publicId: {
+    //             type: String
+    //         }
+    //     }
+    // },
     access_token:{type: String, required: false},
-    refresh_token:{type: String, required: false}
+    refresh_token:{type: String, required: false},
 },{timestamps: true})
 
 

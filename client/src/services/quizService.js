@@ -4,6 +4,12 @@ const quizService = {
     getAll(params){
         return api.get("/quizzes",params);
     },
+    getAllMyQuizzes(createdBy){
+        return api.get(`/quizzes/my-quizzes/${createdBy}`);
+    },
+    getQuizDetails(quizId){
+        return api.get(`/quizzes/get-quiz/${quizId}`);
+    },
     create(body) {
         return api.post("/quizzes/create",body);
     },
@@ -16,3 +22,5 @@ const quizService = {
 };
 
 export default quizService;
+
+

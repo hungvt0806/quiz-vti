@@ -1,18 +1,21 @@
-import React from 'react'
-import Navbar from '../../components/Navbar';
-import { Outlet } from 'react-router';
-import './style.css'
+import React from 'react';
+import MyExplore from '../../components/MyExplore';
+import MySidebar from '../../components/MySidebar';
+import MyHeader from '../../components/MyHeader';
 
 
 const HomePage = () => {
   return (
     
+    <div className='w-full h-[100vh] flex '>
+    <MySidebar/>
     <div className='w-full h-full'>
-   <Navbar/>
-   <div className='w-full h-[calc(100vh-50px)]'>
-    <Outlet/>
+   <MyHeader/>
+   <div className='w-full h-[calc(100vh-50px)] '>
+   <MyExplore/>
     </div>
     </div>
+   </div>
 
   );
 };

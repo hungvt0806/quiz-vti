@@ -56,10 +56,7 @@ exports.login = async (req,res,next) => {
                 status : 'success',
                 data: {
                     token,
-                    userName: user.name,
-                    userId:user.userId,
-                    role:user.isAdmin,
-                    avatar:user.avatar
+                    user
                 }
             })
         }else {
@@ -70,20 +67,12 @@ exports.login = async (req,res,next) => {
     }
 }
 
-exports.updateUser = async (req, res,next) => {
+exports.getDetailsUser = async (req, res,next) => {
     try {
-        const userId = req.params
-        
-
-       
-
-        // Cập nhật thông tin người dùng
-        const updatedUser = await User.findByIdAndUpdate(userId,{...req.body}, { new: true,runValidator: true });
-        
-        return res.status(200).json({
-            status: 'OK',
-            message: 'SUCCESS',
-            data: {updatedUser}
+        User.findOne({ _id: req.params.id }).then(user => {
+            res.json({ user, success: true })
+        }).catch(er => {
+            res.json({ success: false, message: er.message });
         })
     } catch (e) {
         return res.status(500).json({

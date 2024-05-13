@@ -12,14 +12,7 @@ const Navbar = () => {
         <img src={logo} alt="logo"  className='w-[130px] h-[50px]'/>
         </Link>
         </div>
-        <div className='flex items-center'>
-        <Link to="/login">
-        <Button type="primary" className='mr-4 bg-purple-600 w-[100px]' >
-          Login
-        </Button>
-      </Link>
-      
-    </div>
+        
       </div>
     </div>
   )

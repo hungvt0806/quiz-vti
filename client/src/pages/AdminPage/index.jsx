@@ -1,7 +1,7 @@
 import React from 'react';
 import MyHeader from '../../components/MyHeader';
 import MySidebar from '../../components/MySidebar';
-import { Outlet } from 'react-router-dom';
+import Report from '../../components/Report';
 
 
 
@@ -13,7 +13,7 @@ const AdminPage = () => {
      <div className='w-full h-full'>
     <MyHeader/>
     <div className='w-full h-[calc(100vh-50px)] '>
-    <Outlet/>
+    <Report/>
      </div>
      </div>
     </div>

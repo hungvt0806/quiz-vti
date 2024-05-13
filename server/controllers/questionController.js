@@ -1,4 +1,4 @@
-const Question = require('../models/QuestionModel');
+
 
 //get all  questions
 exports.getAllQuestions = async (req,res,next)=>{

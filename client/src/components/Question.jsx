@@ -1,39 +1,33 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useContext } from "react";
 import { IoIosCheckboxOutline } from "react-icons/io";
 import { FaPencilAlt } from "react-icons/fa";
-import { CheckOutlined } from "@ant-design/icons";
 import { toast } from 'react-toastify';
-import questionService from '../services/questionService';
-import { useLocation } from "react-router";
+import quizService from "../services/quizService";
+import AppContext from '../contex/AppContext';
 
 
 
-
-const Question = ({ sendData }) => {
+const Question = () => {
+  
   const [allQuestions,setAllQuestions] = useState([]);
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const quizId = searchParams.get('quizId');
-
   
+  const {state,dispatch} = useContext(AppContext);
+
+  const {user,quizzes} = state;
   
-  const getAllQuestions = async() =>{
+  useEffect(()=>{
+  const getQuizDetails = async() =>{
+
     try {
-      console.log("getAllQuestions function executed");
-      const response = await questionService.getAll({ params: {quizId: quizId }});  
-      console.log("response  la :",response.data.data);
-      setAllQuestions(response.data.data.questions);
-      sendData(response.data.data);
-
+      console.log("getQuizDetails function executed",quizzes._id);
+      const response = await quizService.getQuizDetails(quizzes._id);    
+      console.log("questions  la :",response.data.quiz.questions);
+      setAllQuestions(response.data.quiz.questions);
 } catch (error) {
-      console.log(error)}
+      toast.error(error)}
 }
-
-useEffect(()=>{
   
-
-getAllQuestions();
+getQuizDetails();
   },[])
   
  
@@ -58,7 +52,7 @@ getAllQuestions();
         </div>
         <div className="text-2xl mb-1 w-full relative">
           <span className="px-2">{index+1}.</span>
-          <span>{question.question}</span>
+          <span>{question.questionName}</span>
         </div>
         <hr className="w-full border-1 border-b-3 bg-gray-200 "  />
         <br></br>
@@ -67,20 +61,20 @@ getAllQuestions();
           <div className="md:w-1/2 w-full flex">
           
           <span className={`rounded-full w-6 h-6 flex items-center justify-center
-               ${question.correctOption === 1 ? 'bg-green-500' : 'bg-red-500'}`}>
+               ${question.correctAnswer === 1 ? 'bg-green-500' : 'bg-red-500'}`}>
                 <span className="text-ls">1</span>
               </span>
-              <span className="ml-2">{question.options[0]}</span>
+              <span className="ml-2">{question.answers[0].name}</span>
           
           </div>
 
           {/* Đáp án 2 */}
           <div className="md:w-1/2 w-full flex">
           <span className={`rounded-full w-6 h-6 flex items-center justify-center
-               ${question.correctOption === 2 ? 'bg-green-500' : 'bg-red-500'}`}>
+               ${question.correctAnswer === 2 ? 'bg-green-500' : 'bg-red-500'}`}>
                 <span className="text-ls">2</span>
               </span>
-              <span className="ml-2">{question.options[1]}</span>
+              <span className="ml-2">{question.answers[1].name}</span>
           
           </div>
         </div>
@@ -89,20 +83,20 @@ getAllQuestions();
         {/* Đáp án 3 */}
         <div className="md:w-1/2 w-full flex">
         <span className={`rounded-full w-6 h-6 flex items-center justify-center
-               ${question.correctOption === 3 ? 'bg-green-500' : 'bg-red-500'}`}>
+               ${question.correctAnswer === 3 ? 'bg-green-500' : 'bg-red-500'}`}>
                 <span className="text-ls">3</span>
               </span>
-              <span className="ml-2">{question.options[2]}</span>
+              <span className="ml-2">{question.answers[2].name}</span>
           
           </div>
 
           {/* Đáp án 4 */}
           <div className="md:w-1/2 w-full flex">
           <span className={`rounded-full w-6 h-6 flex items-center justify-center
-               ${question.correctOption === 4 ? 'bg-green-500' : 'bg-red-500'}`}>
+               ${question.correctAnswer === 4 ? 'bg-green-500' : 'bg-red-500'}`}>
                 <span className="text-ls">4</span>
               </span>
-              <span className="ml-2">{question.options[3]}</span>
+              <span className="ml-2">{question.answers[3].name}</span>
           
           </div>
         </div>

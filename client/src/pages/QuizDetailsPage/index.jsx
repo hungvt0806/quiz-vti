@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import MyHeader from '../../components/MyHeader';
 import MySidebar from '../../components/MySidebar';
-import Question from '../../components/Question';
+import QuizDetail from '../../components/QuizDetail';
+import './QuestionDetail.css';
 
-const QuizDetailPage = () => {
+
+const QuizDetailsPage = () => {
+
+  
+
+  
   return (
+  
     <div className='w-full h-full flex'>
      <MySidebar/>
      <div className='w-full h-full'>
     <MyHeader/>
     <div className='w-full h-[calc(100vh-50px)]'>
-     <Question/>
+       <QuizDetail />
      </div>
      </div>
     </div>
   )
 }
 
-export default QuizDetailPage
+export default QuizDetailsPage

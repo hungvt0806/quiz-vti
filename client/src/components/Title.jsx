@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { TbMessageQuestion } from "react-icons/tb";
 import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { IoLibraryOutline } from "react-icons/io5";
 import {UserOutlined} from "@ant-design/icons"
 import { FaPencilAlt } from 'react-icons/fa';
+import AppContext from '../contex/AppContext';
 
 
-const Title = (getData) => {
-  useEffect(() => {
-    console.log('getData la', getData);
-  }, [getData]);
+const Title = () => {
+
+  const {state,dispatch} = useContext(AppContext);
+  const {quizzes} = state;
+
+    console.log('quiz la', quizzes);
+  
 
 
   return (
@@ -20,19 +24,19 @@ const Title = (getData) => {
         <TbMessageQuestion className="w-[50px] h-[50px]  bg-blue-600 rounded-xl mt-2 justify-center" />
         <FaPencilAlt className="ml-2" />
         </div>
-        <p className="font-bold mt-2 justify-center ">{getData?.getData?.questions[0]?.quizId?.title}</p>
+        <p className="font-bold mt-2 justify-center ">{quizzes.title}</p>
         </div>
         <div className="flex items-center ml-5">
           <MdOutlineQuestionAnswer />
-          <p className='pl-1 '> {getData?.getData?.questions?.length} Quesitons </p>
+          <p className='pl-1 '> {quizzes.questionCount} Quesitons </p>
           </div>
           <div className='flex items-center ml-5 '>
           <IoLibraryOutline />
-          <p className='pl-1'>{getData?.getData?.questions[0]?.quizId?.type}</p>
+          <p className='pl-1'>{quizzes.category}</p>
         </div>
         <div className='flex items-center ml-5' > 
           <UserOutlined />
-          <p className='pl-2'>{getData?.getData?.questions[0]?.quizId?.author?.name}</p> 
+          <p className='pl-2'>{quizzes.category}</p> 
         </div>
       </div>
     

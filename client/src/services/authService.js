@@ -7,8 +7,9 @@ const authService = {
     register(body) {
         return api.post("auth/register",body);
     },
-    updateUser(body){
-        return api.put("auth/update-user",body);
+    getUserDetails(id){
+        return api.get(`auth/${id}`);
+
     }
 };
 

@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 const QuizDetail = () => {
 
+    
     const [questionData,setQuestionData] = useState();
 
     const handleQuestionData = (data) => {
@@ -27,7 +28,7 @@ const QuizDetail = () => {
             </nav>
             <div className="p-1 bg-fuchsia-200 w-full py-1 px-2  flex-col overflow-y-auto overflow-x-hidden h-6/6" >
                 
-                <Question sendData={handleQuestionData}/>
+                <Question />
             </div>
         </div>
         

@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, unstable_HistoryRouter, useNavigate } from 'react-router-dom'
 import authService from '../services/authService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AppContext from '../contex/AppContext';
 
 
 const LoginRegister = () => {
-  
+
+    const {dispatch} = useContext(AppContext);
+    const [errorMessenge,setErrorMessage] = useState(null);
     const [state,setState] = useState("Login");
     const [formData, setFormData] = useState({
         name:"",
@@ -24,29 +27,23 @@ const LoginRegister = () => {
     
     const login = async() =>{
       try {
-        
-                console.log("Login function executed",formData);
-                const response = await authService.login(formData);
-                  
-                console.log("response  la :",response.data.data);
-                localStorage.setItem('userDetail', JSON.stringify(response.data.data));
-                localStorage.setItem('avatar',response.data.data.avatar);
-                // localStorage.setItem('username', JSON.stringify(response.data.data.userName));
-                // localStorage.setItem('auth-token', response.data.data.token);
-                // localStorage.setItem('role', response.data.data.role);
-                // localStorage.setItem('userId', response.data.data.userId);
+        console.log("Login function executed",formData);        
+        //e.preventtDefault();
                 
-                
+        const response = await authService.login(formData); 
 
-                toast.success("Wellcome");     
-                navigate("/admin");
-                
         
-              } catch (error) {
-                toast.error(error.response.data.status)}
+        const {token, user} = response.data.data;
+        console.log("response  la :",response.data.data);
+        localStorage.setItem('token',token);
+        localStorage.setItem('userId',user._id)
+        dispatch({type:"CURRENT_USER",payload: {user}}); 
+        toast.success("Wellcome");     
+        navigate("/homepage");
+      
+      } catch (error) {
+        toast.error(error.response.data.message)}
     }
-        
-
     
        const signup = async() =>{
          try {
@@ -54,19 +51,25 @@ const LoginRegister = () => {
             const response = await authService.register(formData);
           
 
-            console.log("response  la :",response.data.data);
-            localStorage.setItem('userDetail', JSON.stringify(response.data.data));
-            localStorage.setItem('avatar',response.data.data.avatar);
-            toast.success(response.status);  
-            navigate("/admin");
+        const {token, user} = response.data.data;
+        console.log("response  la :",response.data.data);
+        localStorage.setItem('token',token);
+        localStorage.setItem('userId',user._id)
+        dispatch({type:"CURRENT_USER",payload: {user}}); 
+        toast.success("Wellcome");     
+        navigate("/homepage");
              
-         } catch (error) {
-            toast.error(error.response.data.status)}
-       }
+         } catch (error) {  
+          setErrorMessage(error.response.data.status)
+        }
+       };
 
   return (
     <div className="containerAuthor">
     <div className="form signup">
+      {errorMessenge &&(
+        <div className='error-message'>Error: {errorMessenge}</div>
+      )}
       <h2>{state}</h2>
       {state ==="Sign Up" ? <div className="inputBox">
       <input name='name'value={formData.name} onChange={changeHandler} type="text" required="required" />
@@ -87,8 +90,8 @@ const LoginRegister = () => {
       <div className="inputBox">
         <input type="submit" value={state ==="Sign Up" ?"Create Account":"Login"} onClick={()=>{state ==="Sign Up" ?signup():login()}} />
       </div>
-      {state==="Sign Up" ? <p>Already a member? <span onClick={()=>{setState("Login")}}>Log in</span></p>
-                        : <p> No account? <span onClick={()=>{setState("Sign Up")}}>Create an account</span></p>} 
+      {state==="Sign Up" ? <p>Already a member? <span onClick={()=>{setState("Login")}}style={{fontWeight: 'bold',color: 'white',cursor: 'pointer'}}>Log in</span></p>
+                        : <p> No account? <span onClick={()=>{setState("Sign Up")}}style={{fontWeight: 'bold',color: 'white',cursor: 'pointer'}}>Create an account</span></p>} 
       
     </div>
     </div>
