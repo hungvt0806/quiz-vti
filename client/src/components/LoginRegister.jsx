@@ -3,12 +3,12 @@ import { Link, unstable_HistoryRouter, useNavigate } from 'react-router-dom'
 import authService from '../services/authService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AppContext from '../contex/AppContext';
+import  { useStateValue } from '../contex/AppContext';
 
 
 const LoginRegister = () => {
 
-    const {dispatch} = useContext(AppContext);
+  const {dispatch} = useStateValue();
     const [errorMessenge,setErrorMessage] = useState(null);
     const [state,setState] = useState("Login");
     const [formData, setFormData] = useState({

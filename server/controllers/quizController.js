@@ -168,17 +168,28 @@ exports.getAllQuizzes = async (req,res,next)=>{
         const totalPages = Math.ceil(totalQuizzes / limit); // Tổng số trang
 
         const quizzes = await Quiz.find()
+            .populate('createdBy')
             .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
             .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
             .limit(limit); // Giới hạn số lượng phần tử trả về
 
+        // Tạo mảng các promises để lấy số lượng câu hỏi trong mỗi bài quiz
+        const promises = quizzes.map(async (quiz) => {
+            const questionCount = quiz.questions.length;
+            return { ...quiz.toObject(), questionCount };
+            });
+
+            // Chờ tất cả các promises hoàn thành
+        const quizzesWithQuestionCount = await Promise.all(promises);
+
         res.status(200).json({
-            status : 'success',
-            results: quizzes.length,
+            status: 'success',
+            results: quizzesWithQuestionCount.length,
             currentPage: page,
             totalPages: totalPages,
-            data: { quizzes }
-        });
+            data: { quizzes: quizzesWithQuestionCount }
+        
+                });
 
         
     }catch (error){
@@ -191,7 +202,9 @@ exports.getAllQuizzes = async (req,res,next)=>{
 
 exports.getQuizDetails = async (req,res,next)=>{
     try{
-        Quiz.findOne({ _id: req.params.id }).then(quiz => {
+        Quiz.findOne({ _id: req.params.id })
+        .populate('createdBy')
+        .then(quiz => {
             res.status(200).json({quiz});
         }).catch(er => {
             res.status(500).send(er);

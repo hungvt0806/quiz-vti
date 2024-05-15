@@ -1,9 +1,8 @@
 import React, { useState,useEffect, useContext } from "react";
 import { IoIosCheckboxOutline } from "react-icons/io";
 import { FaPencilAlt } from "react-icons/fa";
-import { toast } from 'react-toastify';
-import quizService from "../services/quizService";
-import AppContext from '../contex/AppContext';
+import  { useStateValue } from '../contex/AppContext';
+import { Link } from "react-router-dom";
 
 
 
@@ -11,31 +10,21 @@ const Question = () => {
   
   const [allQuestions,setAllQuestions] = useState([]);
   
-  const {state,dispatch} = useContext(AppContext);
+  const {state} = useStateValue();
 
   const {user,quizzes} = state;
-  
-  useEffect(()=>{
-  const getQuizDetails = async() =>{
 
-    try {
-      console.log("getQuizDetails function executed",quizzes._id);
-      const response = await quizService.getQuizDetails(quizzes._id);    
-      console.log("questions  la :",response.data.quiz.questions);
-      setAllQuestions(response.data.quiz.questions);
-} catch (error) {
-      toast.error(error)}
-}
-  
-getQuizDetails();
-  },[])
+  console.log('question',state)
+
+
   
  
 
   return (
   <>
   
-  {allQuestions.map((question,index)=>{
+   
+  {quizzes.questions?.map((question,index)=>{
     return (
       <div key={index} className =" flex w-full  flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md px-4 py-2 mb-2 " >
   
@@ -45,10 +34,13 @@ getQuizDetails();
             <IoIosCheckboxOutline  className="text-green-500 font-bold"/>
             <span className="font-bold">1. Nhiều lựa chọn</span>
           </div>
+       
           <button className="bg-purple-500 hover:bg-purple-900 text-white py-1 px-2 rounded ml-auto inline-flex items-center">
+            <Link to="/editQuestion">
               <FaPencilAlt className="mr-1" />
-              
+            </Link>
           </button>
+          
         </div>
         <div className="text-2xl mb-1 w-full relative">
           <span className="px-2">{index+1}.</span>

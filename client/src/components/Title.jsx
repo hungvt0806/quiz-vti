@@ -4,15 +4,15 @@ import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { IoLibraryOutline } from "react-icons/io5";
 import {UserOutlined} from "@ant-design/icons"
 import { FaPencilAlt } from 'react-icons/fa';
-import AppContext from '../contex/AppContext';
+import  { useStateValue } from '../contex/AppContext';
 
 
 const Title = () => {
 
-  const {state,dispatch} = useContext(AppContext);
+  const {state,dispatch} = useStateValue();
   const {quizzes} = state;
 
-    console.log('quiz la', quizzes);
+    console.log('title la', quizzes.questions);
   
 
 
@@ -28,7 +28,7 @@ const Title = () => {
         </div>
         <div className="flex items-center ml-5">
           <MdOutlineQuestionAnswer />
-          <p className='pl-1 '> {quizzes.questionCount} Quesitons </p>
+          <p className='pl-1 '> {quizzes.questions.length} Quesitons </p>
           </div>
           <div className='flex items-center ml-5 '>
           <IoLibraryOutline />
@@ -36,7 +36,7 @@ const Title = () => {
         </div>
         <div className='flex items-center ml-5' > 
           <UserOutlined />
-          <p className='pl-2'>{quizzes.category}</p> 
+          <p className='pl-2'>{quizzes.createdBy.name}</p> 
         </div>
       </div>
     

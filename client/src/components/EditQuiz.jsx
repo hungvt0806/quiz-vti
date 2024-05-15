@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function editQuiz() {
+export default function EditQuiz() {
   return (
     <div>
       

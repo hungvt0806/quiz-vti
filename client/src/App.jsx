@@ -8,13 +8,12 @@ import AdminPage from './pages/AdminPage';
 import LoginRegisterPage from './pages/LoginRegisterPage';
 import MyLibraryPage from './pages/MyLibraryPage';
 import QuizDetailsPage from './pages/QuizDetailsPage';
-import AppReducer from './reducers/AppReducer';
-import AppContext from './contex/AppContext';
+import { StateProvider } from './contex/AppContext';
+import EditQuestionPage from './pages/EditQuestionPage';
+
 
 function App() {
 
-  const initialState = {user: null, quizzes:[]};
-  const [state,dispatch] = useReducer (AppReducer,initialState);
   
 
   
@@ -22,15 +21,16 @@ function App() {
   return (
 
     <BrowserRouter>
-    <AppContext.Provider value={{state,dispatch}}>
+    <StateProvider>
       <Routes>
             <Route path="/" element={<LoginRegisterPage />} />
             <Route path="/homepage" element={<HomePage />}/>
             <Route path="/createdByMe/:createdBy" element={<MyLibraryPage />} />
             <Route path="/quizDetails/:quizId" element={<QuizDetailsPage />} />
+            <Route path="/editQuestion" element={<EditQuestionPage />} />
             <Route path="/report" element={<AdminPage />} />
       </Routes>
-      </AppContext.Provider>
+      </StateProvider>
       <ToastContainer/>
     </BrowserRouter>
         

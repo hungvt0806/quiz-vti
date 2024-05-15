@@ -5,7 +5,7 @@ import logo from '../assets/logo.png';
 import { TinyColor } from '@ctrl/tinycolor';
 import { Button, ConfigProvider, Modal, Space } from 'antd';
 import { BankOutlined, CameraOutlined, FormOutlined, LogoutOutlined, MonitorOutlined, PlusCircleOutlined, RadiusSettingOutlined, SettingOutlined } from '@ant-design/icons';
-import AppContext from '../contex/AppContext';
+import  { useStateValue } from '../contex/AppContext';
 
 const colors2 = ['#fc6076', '#ff9a44', '#ef9d43', '#e75516'];
 
@@ -15,8 +15,9 @@ const getActiveColors = (colors) =>
   colors.map((color) => new TinyColor(color).darken(5).toString());
 
 const MySidebar = () => {
-  const {state,dispatch} = useContext(AppContext);
+  const {state,dispatch} = useStateValue();
   const {user} = state;
+
 
 
   const sigOut =() =>{
