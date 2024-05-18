@@ -10,6 +10,7 @@ import suckhoe from "../assets/suckhoe.png"
 import tienganh from "../assets/tienganh.png"
 import toanhoc from "../assets/toanhoc.png"
 import { RightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom'
 
 const MyExplore = () => {
 
@@ -28,7 +29,9 @@ const MyExplore = () => {
         <div className="w-full flex items-center bg-white px-2 rounded-lg">
           <p className='bg-purple-100 w-fit min-w-max h-[30px] rounded text-purple-700 text-sm p-1 font-semibold'>{selectedTopic}</p>
           <input type="text" name="search" placeholder="Tìm kiếm quiz về bất kỳ chủ đề nào" className="w-full  bg-white p-2 text-[18px]"/>
+          <Link to='/search'>
           <RightOutlined />
+          </Link>
         </div>
       </div>
       <div className="w-full flex flex-wrap justify-between items-end gap-5 mt-10">

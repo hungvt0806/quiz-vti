@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { TbMessageQuestion } from "react-icons/tb";
 import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { IoLibraryOutline } from "react-icons/io5";
-import {UserOutlined} from "@ant-design/icons"
+import {CommentOutlined, DeleteOutlined, LikeOutlined, UserOutlined} from "@ant-design/icons"
 import quizService from '../services/quizService';
 import { toast } from 'react-toastify';
 import { Pagination } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStateValue } from '../contex/AppContext';
 import AppReducer from '../reducers/AppReducer';
+import { FaPencilAlt } from 'react-icons/fa';
 
 
 
@@ -46,22 +47,20 @@ getAllMyQuizzes();
 
   
 
-  const getQuizDetail = async (quizId) => {
+  const getQuizDetail = async (quizId,mode) => {
     try {
     
       const response = await quizService.getQuizDetails(quizId);
       console.log('detail la', response.data.quiz); 
       dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.quiz });
       console.log('details one quiz', state);
-      navigate("/quizDetails/:quizId");
+      mode=="detail"?navigate("/quizDetails/:quizId"):navigate("/editQuiz");
     } catch (error) {
       toast.error(error);
     } 
   };
 
-  // useEffect(() => {
-  //   console.log("Updated state:", state);
-  // }, [state]);
+  
 
 
 
@@ -79,13 +78,29 @@ getAllMyQuizzes();
 
         {allQuizzes.map((quiz,index)=> {
   return (
-    <div key={index} className="w-[800px] h-[110px] bg-white flex relative bg-clip-border rounded-xl p-2 shadow-md">
+    <div key={index} className="w-[800px] h-[115px] bg-white flex relative bg-clip-border rounded-xl p-2 shadow-md">
       <TbMessageQuestion className="w-[95px] h-[95px] bg-blue-600 rounded-xl" />
-      <div className="ml-5 mt-1">
-        
-        <button onClick={()=>getQuizDetail(quiz._id)} className="rounded-lg bg-gray-200 w-[45px]">Quiz</button>
-      
-        <p className="font-bold">{quiz.title}</p>
+      <div className="ml-5 mt-1 w-full">
+
+        <div className='flex justify-between items-center'>
+
+        <button onClick={()=>getQuizDetail(quiz._id,"detail")} className="rounded-lg bg-gray-200 w-fit">
+          <p className="font-bold">{quiz.title}</p>
+          </button>
+
+          <div className="flex items-center ">
+          <button onClick={()=>getQuizDetail(quiz._id,"edit")} className=" hover:text-blue-500  py-1 px-2 rounded ml-auto inline-flex items-center">
+          
+              <FaPencilAlt className="mr-1" />
+           
+          </button>
+          <button className=" hover:text-red-500  py-1 px-2 rounded ml-auto inline-flex items-center">
+            <Link to="">
+            <DeleteOutlined className="mx-1" /> 
+             </Link>
+          </button>
+          </div>
+        </div>
         <div className="flex items-center">
           <MdOutlineQuestionAnswer />
           <p className='pl-2 pr-10'>{quiz.questionCount} Questions</p>
@@ -94,9 +109,16 @@ getAllMyQuizzes();
         </div>
         <div className='flex items-center' > 
           <UserOutlined />
-          <p className='pl-2'>{quiz.createdBy.name}</p> 
+          <p className='pl-2 pr-10'>{quiz.createdBy.name}</p> 
+          </div>
+          <div className="flex items-center">
+          <LikeOutlined />
+          <p className='pl-2 pr-10'>{quiz.likes}</p>
+          <CommentOutlined />
+          <p className='pl-2'>{quiz.comments.length}</p>
+          </div>
           <button className="bg-violet-700 w-[80px] h-15px] absolute right-1 bottom-1 rounded-md text-white mr-2 ">Play</button>
-        </div>
+        
       </div>
     </div>
   );

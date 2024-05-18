@@ -1,5 +1,5 @@
 const express = require('express');
-const {createOneQuiz, getAllMyQuizzes, getAllQuizzes, getQuizDetails, addComment, addLike, addResult,getResultByScoreId,deleteOneQuiz } = require('../controllers/quizController.js');
+const {createOneQuiz, getAllMyQuizzes, getAllQuizzes, getQuizDetails, addComment, addLike, addResult,getResultByScoreId,deleteOneQuiz, updateOneQuiz } = require('../controllers/quizController.js');
 const { verifyToken } = require('../middleware/verifyToken.js');
 
 const Router = express.Router();
@@ -14,5 +14,6 @@ const Router = express.Router();
   Router.route('/save-results') .post(verifyToken,addResult);
   Router.route('/results/:id' ).get(verifyToken,getResultByScoreId);
   Router.route('/delete/:id').delete(verifyToken,deleteOneQuiz);
+  Router.route('/update/:id').put(verifyToken,updateOneQuiz);
 
 module.exports = Router;

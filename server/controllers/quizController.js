@@ -122,7 +122,7 @@ exports.getAllMyQuizzes = async (req,res,next)=>{
             .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
             .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
             .limit(limit) // Giới hạn số lượng phần tử trả về
-            .select('title questions category createdBy');
+            .select('title questions category createdBy likes comments');
 
         // Tạo mảng các promises để lấy số lượng câu hỏi trong mỗi bài quiz
 const promises = quizzes.map(async (quiz) => {
@@ -340,7 +340,7 @@ exports.getResultByScoreId = async (req,res,next)=>{
 exports.updateOneQuiz = async (req,res,next)=>{
     try{
     
-        const {quizId}  = req.query.id;
+        const quizId  = req.params.id;
 
         if (!quizId) {
             return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });

@@ -1,4 +1,4 @@
-export const initialState = {user: null, quizzes:[]};
+export const initialState = {user: null, quizzes:[],question: null};
 
 
 export default function AppReducer( state, action ) {
@@ -12,6 +12,8 @@ export default function AppReducer( state, action ) {
           return { ...state,user: action.payload };
       case "GET_DETAILS_ONE_QUIZ":
           return { ...state,quizzes: action.payload};
+      case "GET_DETAILS_ONE_QUESTION":
+          return { ...state,question: action.payload};
       case "GET_RESULT_BY_SCORE_ID":
           return { ...state,quizzes: action.payload };
       case "ADD_COMMENT":
@@ -20,6 +22,10 @@ export default function AppReducer( state, action ) {
           return { ...state,quizzes: action.payload };
       case "ADD_RESULT":
           return { ...state,quizzes: action.payload };
+      case "NEW_QUIZ":
+          return { ...state,quizzes: action.payload.quizzes,question:action.payload.question };
+          case "NEW_QUESTION":
+          return { ...state,question:action.payload };
       case "CREATE_ONE_QUIZ":
           return { ...state,quizzes:[...state.quizzes, action.payload] };
       case "UPDATE_ONE_QUIZ":
@@ -40,6 +46,5 @@ export default function AppReducer( state, action ) {
     default:
       return state
     }
-    throw Error('Unknown action: ' + action.type);
   }
   

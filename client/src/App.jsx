@@ -10,6 +10,11 @@ import MyLibraryPage from './pages/MyLibraryPage';
 import QuizDetailsPage from './pages/QuizDetailsPage';
 import { StateProvider } from './contex/AppContext';
 import EditQuestionPage from './pages/EditQuestionPage';
+import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
+import EditQuizPage from './pages/EditQuizPage';
+import TestComponentPage from './pages/TestComponent';
+import ExplorePage from './pages/ExplorePage';
 
 
 function App() {
@@ -25,10 +30,15 @@ function App() {
       <Routes>
             <Route path="/" element={<LoginRegisterPage />} />
             <Route path="/homepage" element={<HomePage />}/>
+            <Route path="/dashboard" element={<DashboardPage />}/>
             <Route path="/createdByMe/:createdBy" element={<MyLibraryPage />} />
             <Route path="/quizDetails/:quizId" element={<QuizDetailsPage />} />
             <Route path="/editQuestion" element={<EditQuestionPage />} />
-            <Route path="/report" element={<AdminPage />} />
+            <Route path="/editQuiz" element={<EditQuizPage />} />
+            <Route path="/adminpage" element={<AdminPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/search" element={<ExplorePage />} />
+            <Route path="/test" element={<TestComponentPage />} />
       </Routes>
       </StateProvider>
       <ToastContainer/>

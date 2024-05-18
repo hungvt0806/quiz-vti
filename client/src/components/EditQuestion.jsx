@@ -2,20 +2,60 @@ import React from "react";
 import { useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { TbBackground } from "react-icons/tb";
+import { useStateValue } from "../contex/AppContext";
+import { useNavigate } from "react-router";
 
 const EditQuestion = () => {
+
+  const {state} = useStateValue();
+
+  const {user,quizzes,question} = state;
+
+  console.log('editquestion',state)
+
+
+
+
   const [input1Clicked, setInput1Clicked] = useState(false);
   const [input2Clicked, setInput2Clicked] = useState(false);
   const [input3Clicked, setInput3Clicked] = useState(false);
   const [input4Clicked, setInput4Clicked] = useState(false);
   const [isHovered1, setIsHovered1] = useState(false); 
-   const [isHovered2, setIsHovered2] = useState(false);
-   const [isHovered3, setIsHovered3] = useState(false);
-   const [isHovered4, setIsHovered4] = useState(false);
+  const [isHovered2, setIsHovered2] = useState(false);
+  const [isHovered3, setIsHovered3] = useState(false);
+  const [isHovered4, setIsHovered4] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState(question?.correctAnswer||null);
+
+  const [formData, setFormData] = useState({
+    questionName: question?.questionName || "",
+    correctAnswer: question?.correctAnswer || null,
+    answers: question?.answers.map((answer) => ({ name: answer.name })) || Array.from({ length: 4 }, () => ({ name: "" })),
+  });
+
+  
+const navigate = useNavigate();
+    
+const changeHandler = (e)=>{
+    setFormData({...formData,[e.target.name]:e.target.value})
+}
+
+const handleInputChange = (index, e) => {
+  const newAnswers = [...formData.answers]; // Tạo một bản sao mới của mảng answers
+  // Kiểm tra xem phần tử answers[index] có tồn tại không
+  if (newAnswers[index]) {
+    newAnswers[index].name = e.target.value; // Cập nhật nội dung của câu trả lời
+    setFormData({ ...formData, answers: newAnswers }); // Cập nhật state formData với câu trả lời mới
+  }
+};
 
 
+
+ 
+console.log('formData la',formData)
 
   const handleInput1Click = () => {
+    setCorrectAnswer(1);
+    setFormData({ ...formData, correctAnswer: 1 });
     setInput1Clicked(true);
     setInput2Clicked(false);
     setInput3Clicked(false);
@@ -23,6 +63,8 @@ const EditQuestion = () => {
   };
 
   const handleInput2Click = () => {
+    setCorrectAnswer(2)
+    setFormData({ ...formData, correctAnswer: 2 });
     setInput1Clicked(false);
     setInput2Clicked(true);
     setInput3Clicked(false);
@@ -30,6 +72,8 @@ const EditQuestion = () => {
   };
 
   const handleInput3Click = () => {
+    setCorrectAnswer(3)
+    setFormData({ ...formData, correctAnswer: 3 });
     setInput1Clicked(false);
     setInput2Clicked(false);
     setInput3Clicked(true);
@@ -37,6 +81,8 @@ const EditQuestion = () => {
   };
 
   const handleInput4Click = () => {
+    setCorrectAnswer(4)
+    setFormData({ ...formData, correctAnswer: 4 });
     setInput1Clicked(false);
     setInput2Clicked(false);
     setInput3Clicked(false);
@@ -72,9 +118,11 @@ const EditQuestion = () => {
       <div className="bg-[#461a42] flex flex-col    items-center justify-start pt-5 w-[1000px] h-[600px] rounded-md ">
         <label className="w-[950px] h-[300px] flex justify-center items-center border  border-gray-100 rounded-md bg-[#461a42] hover:bg-[#2e112b]">
           <textarea
+          name="questionName"
+            onChange={(e) => changeHandler(e)}
             style={{ outline: "none", border: "1px solid transparent" }}
-            placeholder="Nhập câu hỏi vào đây"
-            className="w-[550px] h-[80px]   border border-none  resize-none bg-[#461a42] hover:bg-[#2e112b]"
+            placeholder={question?.questionName}
+            className="w-[550px] h-[80px]  placeholder-white border border-none  resize-none bg-[#461a42] hover:bg-[#2e112b]"
           />
         </label>
         <div className="grid grid-cols-4 gap-1 pt-3  ">
@@ -83,7 +131,7 @@ const EditQuestion = () => {
               <FaRegCheckCircle
                 onClick={handleInput1Click}
                 className={`border ${
-                  input1Clicked ? "bg-green-400" : "bg-fuchsia-300"
+                  input1Clicked||correctAnswer==1 ? "bg-green-400" : "bg-fuchsia-300"
                 } rounded-full w-[20px] h-[20px] `}
                 onMouseEnter={handleMouseEnter1}
                 onMouseLeave={handleMouseLeave1}
@@ -96,10 +144,12 @@ const EditQuestion = () => {
             </div>
             <label className="w-[240px] h-[214px] mt-3 flex justify-center items-center ">
               <textarea
+              name="name"
+              onChange={(e) => handleInputChange(0, e)}
                 style={{ outline: "none", border: "1px solid transparent" }}
                 type="text"
-                className="w-full m-1  border-none h-full rounded-md resize-none border  bg-fuchsia-300 hover:bg-[#dd82ed]"
-                placeholder="Nhập câu trả lời vào đây"
+                className="w-full m-5 placeholder-white border-none h-full rounded-md resize-none border  bg-fuchsia-300 hover:bg-[#dd82ed]"
+                placeholder={question?.answers[0].name}
               />
             </label>
           </div>
@@ -109,7 +159,7 @@ const EditQuestion = () => {
               <FaRegCheckCircle
                 onClick={handleInput2Click}
                 className={`border ${
-                  input2Clicked ? "bg-green-400" : "bg-blue-300"
+                  input2Clicked ||correctAnswer==2? "bg-green-400" : "bg-blue-300"
                 } rounded-full w-[20px] h-[20px] `}
                 onMouseEnter={handleMouseEnter2}
                 onMouseLeave={handleMouseLeave2}
@@ -122,10 +172,12 @@ const EditQuestion = () => {
             </div>
             <label className="w-[240px] h-[214px] mt-3 flex justify-center items-center ">
               <textarea
+              name="name"
+              onChange={(e) => handleInputChange(1, e)}
                 style={{ outline: "none", border: "1px solid transparent" }}
                 type="text"
-                className="w-full m-1  border-none h-full rounded-md resize-none border  bg-blue-300 hover:bg-[#78aae3]"
-                placeholder="Nhập câu trả lời vào đây"
+                className="w-full m-5 placeholder-white border-none h-full rounded-md resize-none border  bg-blue-300 hover:bg-[#78aae3]"
+                placeholder={question?.answers[1].name}
               />
             </label>
           </div>
@@ -135,7 +187,7 @@ const EditQuestion = () => {
               <FaRegCheckCircle
                 onClick={handleInput3Click}
                 className={`border ${
-                  input3Clicked ? "bg-green-400" : "bg-[#7e9df2]"
+                  input3Clicked ||correctAnswer==3? "bg-green-400" : "bg-[#7e9df2]"
                 } rounded-full w-[20px] h-[20px] `}
                 onMouseEnter={handleMouseEnter3}
                 onMouseLeave={handleMouseLeave3}
@@ -148,10 +200,12 @@ const EditQuestion = () => {
             </div>
             <label className="w-[240px] h-[214px] mt-3 flex justify-center items-center ">
               <textarea
+              name="name"
+              onChange={(e) => handleInputChange(2, e)}
                 style={{ outline: "none", border: "1px solid transparent" }}
                 type="text"
-                className="w-full m-1  border-none h-full rounded-md resize-none border  bg-[#7e9df2] hover:bg-[#4b71db]"
-                placeholder="Nhập câu trả lời vào đây"
+                className="w-full m-5 placeholder-white border-none h-full rounded-md resize-none border  bg-[#7e9df2] hover:bg-[#4b71db]"
+                placeholder={question?.answers[2].name}
               />
             </label>
           </div>
@@ -161,7 +215,7 @@ const EditQuestion = () => {
               <FaRegCheckCircle
                 onClick={handleInput4Click}
                 className={`border ${
-                  input4Clicked ? "bg-green-400" : "bg-fuchsia-300"
+                  input4Clicked ||correctAnswer==4? "bg-green-400" : "bg-fuchsia-300"
                 } rounded-full w-[20px] h-[20px] `}
                 onMouseEnter={handleMouseEnter4}
                 onMouseLeave={handleMouseLeave4}
@@ -174,21 +228,23 @@ const EditQuestion = () => {
             </div>
             <label className="w-[240px] h-[214px] mt-3 flex justify-center items-center ">
               <textarea
+              name="name"
+              onChange={(e) => handleInputChange(3, e)}
                 style={{ outline: "none", border: "1px solid transparent" }}
                 type="text"
-                className="w-full m-1  border-none h-full rounded-md resize-none border  bg-pink-300 hover:bg-[#eb75b6]"
-                placeholder="Nhập câu trả lời vào đây"
+                className="w-full m-5 placeholder-white  border-none h-full rounded-md resize-none border  bg-pink-300 hover:bg-[#eb75b6]"
+                placeholder={question?.answers[3].name}
               />
             </label>
           </div>
         </div>
         <div className="flex gap-5 mb-9 ">
           <button className="mt-10  bg-fuchsia-700 rounded-md w-[100px] h-[30px] hover:bg-[#6f0d78]  ">
-            Lưu câu hỏi
+            SAVE
           </button>
 
           <button className="mt-10 bg-fuchsia-700 rounded-md w-[100px] h-[30px] hover:bg-[#6f0d78]  ">
-            Xóa câu hỏi
+            DELETE
           </button>
         </div>
       </div>
