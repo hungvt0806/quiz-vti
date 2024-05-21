@@ -7,6 +7,7 @@ import { Button, ConfigProvider, Modal, Space } from 'antd';
 import { BankOutlined, CameraOutlined, FormOutlined, FundOutlined, LogoutOutlined, MonitorOutlined, PlusCircleOutlined, RadiusSettingOutlined, SettingOutlined } from '@ant-design/icons';
 import  { useStateValue } from '../contex/AppContext';
 import { toast } from 'react-toastify';
+import quizService from '../services/quizService';
 
 const colors2 = ['#fc6076', '#ff9a44', '#ef9d43', '#e75516'];
 
@@ -17,7 +18,7 @@ const getActiveColors = (colors) =>
 
 const MySidebar = () => {
   const {state,dispatch} = useStateValue();
-  const {user} = state;
+  const {user,quizzes,questionId} = state;
 
   const navigate = useNavigate();
 
@@ -35,18 +36,35 @@ const MySidebar = () => {
   const avatar = localStorage.getItem('avatar');
 
   
-  console.log('ten ');
+  const defaultQuiz = {
+    quiz: {
+      title: "Quiz Name",
+      category: "Select Category" 
+    },
+    createdBy: user.user._id, 
+    
+  };
   
   const createOneQuiz = async () => {
     try {
-     
-      dispatch({ type: "NEW_QUIZ", payload :{quizzes: null,question: null} });
-      console.log('details new quiz', state);
-      navigate("/editQuiz");
+      console.log('new quiz', defaultQuiz); // Kiểm tra xem defaultQuiz đã được xác định chưa
+      const response = await quizService.create(defaultQuiz); // Gọi hàm create với dữ liệu defaultQuiz
+      console.log('new quiz response', response.data);
+       dispatch({ type: "NEW_QUESTION", payload: -1 });
+      dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.data.quiz });
+      
+      const res = await quizService.getQuizDetails(quizzes._id);
+      console.log('detail la', res.data.quiz); 
+      navigate(`/newQuiz/${quizzes._id}`);
+
+
+      // console.log('details new quiz', state);
+      // navigate("/editQuiz");
     } catch (error) {
       toast.error(error);
     } 
   };
+  
 
  
   

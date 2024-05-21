@@ -2,8 +2,9 @@
 require ('dotenv').config();
 //connect DB
 const {connectDB} = require('./config/db');
-
 connectDB();
+
+
 const express = require('express');
 const cors = require('cors');
 
@@ -13,6 +14,7 @@ const quizRoute = require('./routes/quizRoute');
 
 const { register } = require('./controllers/authController');
 const multer = require('multer');
+
 const path = require('path');
 
 const app = express();
@@ -29,10 +31,10 @@ app.use('/api/v1/quizzes',quizRoute);
 
 //Image Storage Engine
 const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename:(req,file,cb)=>{
-        return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
+  destination: './upload/images',
+  filename:(req,file,cb)=>{
+      return cb(null,`${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  }
 })
 
 const upload = multer({storage:storage})
@@ -40,13 +42,14 @@ const upload = multer({storage:storage})
 //Creating upload Endpoint for image
 app.use('/images',express.static('upload/images'))
 
-app.post("/upload",upload.single('avatar'),(req,res)=>{
+app.post("/upload",upload.single('product'),(req,res)=>{
 
-    res.json({
-        success: 1,
-        image_url:`http://localhost:${port}/images/${req.file.filename}`
-    })
+  res.json({
+      success: 1,
+      image_url:`http://localhost:${port}/images/${req.file.filename}`
+  })
 })
+  
 
     
 

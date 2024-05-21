@@ -1,6 +1,7 @@
 const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { cloudinary } = require('../config/cloudinary');
 
 exports.register = async (req,res,next) => {
     try{
@@ -31,9 +32,7 @@ exports.register = async (req,res,next) => {
         return res.json({
             status: 'success',
             data:{token,
-                userName: user.name,
-                userId:user.userId,
-                avatar:user.avatar}
+                user}
         })
         
     }catch (error){
@@ -81,4 +80,6 @@ exports.getDetailsUser = async (req, res,next) => {
     });
     }
 }
+
+
 

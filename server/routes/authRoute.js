@@ -1,5 +1,5 @@
 const express = require ('express');
-const {login} = require('../controllers/authController');
+const {login, loadImage} = require('../controllers/authController');
 const{register}= require('../controllers/authController');
 const{getDetailsUser}= require('../controllers/authController');
 const { verifyToken } = require('../middleware/verifyToken');

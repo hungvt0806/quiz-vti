@@ -25,23 +25,23 @@ export default function MyLibrary() {
   const PAGE_SIZE = 5;
   const navigate = useNavigate();
   
-  useEffect(()=>{
+  
 
   const getAllMyQuizzes = async() =>{
 
     try {
-      console.log("getAllMyQuiz function executed",user.user._id);
+      console.log("getAllMyQuiz function executed",user.user._id,page);
       const response = await quizService.getAllMyQuizzes(user.user._id, {
         page: page, 
         limit: PAGE_SIZE
       });    
-      console.log("response  la :",response.data.data,page);
+      console.log("response  la :",response.data.currentPage,page);
       setAllQuizzes(response.data.data.quizzes);
       setTotalPages(response.data.totalPages);
 } catch (error) {
       toast.error(error)}
 }
-  
+useEffect(()=>{ 
 getAllMyQuizzes();
   },[page])
 
@@ -54,13 +54,25 @@ getAllMyQuizzes();
       console.log('detail la', response.data.quiz); 
       dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.quiz });
       console.log('details one quiz', state);
-      mode=="detail"?navigate("/quizDetails/:quizId"):navigate("/editQuiz");
+      mode=="detail"?navigate("/quizDetails/:quizId"):navigate(`/editQuiz/${quizId}`);
     } catch (error) {
       toast.error(error);
     } 
   };
 
-  
+  const deleteQuiz = async (index) => {
+    try {
+      
+      console.log('xoa',index);
+      const res = await quizService.delete(index);
+      const resQuiz = await getAllMyQuizzes();
+      
+      console.log('delete question', resQuiz);
+    } catch (error) {
+      toast.error(error);
+    } 
+  };
+
 
 
 
@@ -94,7 +106,7 @@ getAllMyQuizzes();
               <FaPencilAlt className="mr-1" />
            
           </button>
-          <button className=" hover:text-red-500  py-1 px-2 rounded ml-auto inline-flex items-center">
+          <button onClick={()=>deleteQuiz(quiz._id)} className=" hover:text-red-500  py-1 px-2 rounded ml-auto inline-flex items-center">
             <Link to="">
             <DeleteOutlined className="mx-1" /> 
              </Link>

@@ -1,21 +1,36 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TbMessageQuestion } from "react-icons/tb";
 import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { IoLibraryOutline } from "react-icons/io5";
 import {CommentOutlined, LikeOutlined, QuestionCircleOutlined, UserOutlined} from "@ant-design/icons"
 import { FaPencilAlt } from 'react-icons/fa';
 import  { useStateValue } from '../contex/AppContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import quizService from '../services/quizService';
+import { toast } from 'react-toastify';
 
 
 
-const Title = () => {
+const Title = ({ toggleQuestion, toggleComment }) => {
 
   const {state,dispatch} = useStateValue();
   const {quizzes} = state;
-
+  const navigate = useNavigate();
     console.log('title la', quizzes?.questions);
-  
+
+    const getQuizDetail = async (quizId) => {
+      try {
+      
+        const response = await quizService.getQuizDetails(quizId);
+        console.log('detail la', response.data.quiz); 
+        dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.quiz });
+        console.log('details one quiz', state);
+        navigate(`/editQuiz/${quizId}`);
+      } catch (error) {
+        toast.error(error);
+      } 
+    };
+   
 
 
   return (
@@ -24,10 +39,10 @@ const Title = () => {
         <div className='flex items-center  flex-col'>
           <div className='flex items-end'>
         <TbMessageQuestion className="w-[50px] h-[50px]  bg-blue-600 rounded-xl mt-2 justify-center" />
-        <button className=" hover:text-blue-500  py-1 px-2 rounded ml-auto inline-flex items-center">
-          <Link to="/editQuiz" >
+        <button onClick={()=>getQuizDetail(quizzes?._id)} className=" hover:text-blue-500  py-1 px-2 rounded ml-auto inline-flex items-center">
+          
               <FaPencilAlt className="ml-2" />
-            </Link>
+          
           </button>
         
         </div>
@@ -61,7 +76,7 @@ const Title = () => {
   <div className="flex items-center ml-5">
           <LikeOutlined />
           <p className='pl-2 pr-5'>{quizzes?.likes}</p>
-          <button className=" hover:text-green-600  py-1 px-2 rounded ml-auto inline-flex items-center">
+          <button className=" hover:text-green-600  py-1 px-2 rounded ml-auto inline-flex items-center" onClick={toggleComment}>
             
             <CommentOutlined />
             <p className='pl-2 pr-5'>{quizzes?.comments.length}</p> 
@@ -69,7 +84,7 @@ const Title = () => {
           </button>
           
           
-          <button className=" hover:text-green-600  py-1 px-2 rounded ml-auto inline-flex items-center">
+          <button className=" hover:text-green-600  py-1 px-2 rounded ml-auto inline-flex items-center" onClick={toggleQuestion}>
             
             <QuestionCircleOutlined className='mx-1'/> 
             

@@ -15,6 +15,7 @@ import ProfilePage from './pages/ProfilePage';
 import EditQuizPage from './pages/EditQuizPage';
 import TestComponentPage from './pages/TestComponent';
 import ExplorePage from './pages/ExplorePage';
+import NewQuizPage from './pages/NewQuizPage';
 
 
 function App() {
@@ -34,7 +35,8 @@ function App() {
             <Route path="/createdByMe/:createdBy" element={<MyLibraryPage />} />
             <Route path="/quizDetails/:quizId" element={<QuizDetailsPage />} />
             <Route path="/editQuestion" element={<EditQuestionPage />} />
-            <Route path="/editQuiz" element={<EditQuizPage />} />
+            <Route path="/editQuiz/:quizId" element={<EditQuizPage />} />
+            <Route path="/newQuiz/:quizId" element={<NewQuizPage />} />
             <Route path="/adminpage" element={<AdminPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/search" element={<ExplorePage />} />

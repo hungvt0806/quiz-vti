@@ -13,13 +13,13 @@ const EditQuizPage = () => {
 
   const {state,dispatch} = useStateValue();
 
-  const {user,quizzes,question} = state;
+  const {user,quizzes,questionId} = state;
   const navigate = useNavigate();
 
   const createOneQuestion = async () => {
     try {
      
-      dispatch({ type: "NEW_QUESTION", payload :null });
+      dispatch({ type: "NEW_QUESTION", payload :-1 });
       console.log('details new question', state);
       navigate("/editQuestion");
     } catch (error) {

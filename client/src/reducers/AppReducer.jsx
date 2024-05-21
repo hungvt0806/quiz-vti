@@ -1,4 +1,4 @@
-export const initialState = {user: null, quizzes:[],question: null};
+export const initialState = {user: null, quizzes:[],questionId: null};
 
 
 export default function AppReducer( state, action ) {
@@ -13,7 +13,7 @@ export default function AppReducer( state, action ) {
       case "GET_DETAILS_ONE_QUIZ":
           return { ...state,quizzes: action.payload};
       case "GET_DETAILS_ONE_QUESTION":
-          return { ...state,question: action.payload};
+          return { ...state,questionId: action.payload};
       case "GET_RESULT_BY_SCORE_ID":
           return { ...state,quizzes: action.payload };
       case "ADD_COMMENT":
@@ -23,9 +23,13 @@ export default function AppReducer( state, action ) {
       case "ADD_RESULT":
           return { ...state,quizzes: action.payload };
       case "NEW_QUIZ":
-          return { ...state,quizzes: action.payload.quizzes,question:action.payload.question };
+          return {
+             ...state,
+            quizzes: action.payload.quizzes,
+            questionId:action.payload.questionId 
+        };
           case "NEW_QUESTION":
-          return { ...state,question:action.payload };
+          return { ...state, questionId:action.payload };
       case "CREATE_ONE_QUIZ":
           return { ...state,quizzes:[...state.quizzes, action.payload] };
       case "UPDATE_ONE_QUIZ":

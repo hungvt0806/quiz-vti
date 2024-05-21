@@ -2,89 +2,33 @@ const Quiz = require('../models/QuizModel');
 const User = require('../models/UserModel');
 const Score = require('../models/ScoresModel');
 
-//get all  quizes+ Pagination + Sort + Filter
-
-// exports.getAllQuizzes = async (authorId) => {
-//     try {
-//         // Tìm tất cả các bài quiz của tác giả với userId truyền vào
-//         const quizzes = await Quiz.find({ 'author._id': authorId }).populate('author').exec();
-//         return quizzes;
-//     } catch (error) {
-//         throw error;
-//     }
-// };
-
-
-
-
-
-
-
-// exports.getAllQuizzes = async (req, res, next) => {
-//     try {
-//         const page = parseInt(req.query.page) || 1; // Số trang mặc định là 1 nếu không có truy vấn
-//         const limit = parseInt(req.query.limit) || 20; // Số lượng phần tử trên mỗi trang, mặc định là 10
-//         const sortBy = req.query.sortBy || '_id'; // Trường để sắp xếp, mặc định là 'createdAt'
-//         const sortOrder = req.query.sortOrder || 'asc'; // Hướng sắp xếp, mặc định là 'desc'
-    
-
-//         const startIndex = (page - 1) * limit; // Vị trí bắt đầu của trang hiện tại
-
-//         let filter = {};
-//         // Xử lý các tham số filter từ query string của URL (ví dụ: /api/quizzes?type=languae)
-//         if (req.query.id) {
-//             filter._id =  req.query.idd ;
-//         }
-//         // Các điều kiện filter khác có thể được xử lý tương tự
-
-//         const totalQuizzes = await Quiz.countDocuments(filter); // Tổng số lượng quizzes
-
-//         const totalPages = Math.ceil(totalQuizzes / limit); // Tổng số trang
-
-//         const quizzes = await Quiz.find(filter)
-//             .populate('author')
-//             .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
-//             .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
-//             .limit(limit); // Giới hạn số lượng phần tử trả về
-
-//         res.status(200).json({
-//             status : 'getAllQuizzes success',
-//             results: quizzes.length,
-//             currentPage: page,
-//             totalPages: totalPages,
-//             data: { quizzes }
-//         });
-        
-//     } catch (error) {
-//         return res.status(500).json({
-//             status: 'ERR',
-//             message: error.message || 'Internal server error'
-//         });
-//     }
-// }
-
-
 
 //create one  quiz
 exports.createOneQuiz = async (req,res,next)=>{
     try{
+        let quizData = req.body;
+    
         let quiz = new Quiz({
-            ...req.body.quiz,
-            createdBy: req.body.createdBy,
-            questions: req.body.quiz.questions.map(ques => {
-                return {
-                    ...ques,
-                    answers: ques.answers.map(ans => {
-                        return {
-                            name: ans,
-                            selected: false
-                        }
-                    })
-                }
-            })
+          ...quizData.quiz,
+          createdBy: quizData.createdBy,
+    
+            // questions: req.body.quiz.questions.map(ques => {
+            //     return {
+            //         ...ques,
+            //         answers: ques.answers.map(ans => {
+            //             return {
+            //                 name: ans,
+            //                 selected: false
+            //             }
+            //         })
+            //     }
+            // })
         });
         quiz.save().then(result => {
-            res.status(200).json({success: true});
+            res.status(200).json({
+                success: true,
+                data:{quiz}
+            });
         })
         
     }catch (error){
@@ -99,7 +43,7 @@ exports.getAllMyQuizzes = async (req,res,next)=>{
     try{
 
         const page = parseInt(req.query.page) || 1; // Số trang mặc định là 1 nếu không có truy vấn
-        const limit = parseInt(req.query.limit) || 20; // Số lượng phần tử trên mỗi trang, mặc định là 10
+        const limit = parseInt(req.query.limit) || 5; // Số lượng phần tử trên mỗi trang, mặc định là 10
         const sortBy = req.query.sortBy || 'category'; // Trường để sắp xếp, mặc định là 'createdAt'
         const sortOrder = req.query.sortOrder || 'asc'; // Hướng sắp xếp, mặc định là 'desc'
     
@@ -122,7 +66,7 @@ exports.getAllMyQuizzes = async (req,res,next)=>{
             .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
             .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
             .limit(limit) // Giới hạn số lượng phần tử trả về
-            .select('title questions category createdBy likes comments');
+            // .select('title questions category createdBy likes comments');
 
         // Tạo mảng các promises để lấy số lượng câu hỏi trong mỗi bài quiz
 const promises = quizzes.map(async (quiz) => {
@@ -336,11 +280,12 @@ exports.getResultByScoreId = async (req,res,next)=>{
     }
 }
 
-//update one  quiz
+//update one  quizInform
 exports.updateOneQuiz = async (req,res,next)=>{
     try{
     
         const quizId  = req.params.id;
+        
 
         if (!quizId) {
             return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
@@ -361,7 +306,82 @@ exports.updateOneQuiz = async (req,res,next)=>{
     }
 }
 
+//update one  question on Quiz
+exports.updateOneQuestion = async (req, res, next) => {
+    try {
+      // 1. Trích xuất quizId và index của câu hỏi từ yêu cầu
+      const { quizId, index, answers, correctAnswer, questionName } = req.body;
+  
+      // 2. Kiểm tra xem các thông tin cần thiết có tồn tại không
+      if (!quizId || index === undefined) {
+        return res.status(400).json({ status: 'ERR', message: 'Missing quizId or index' });
+      }
+  
+      // 3. Tạo object câu hỏi mới
+      const question = {
+        answers: answers, // Mảng chuỗi
+        correctAnswer: correctAnswer,
+        questionName: questionName
+      };
+  
+      // 4. Cập nhật câu hỏi trong bài trắc nghiệm
+      const quiz = await Quiz.findByIdAndUpdate(quizId, {
+        $set: { [`questions.${index}`]: question } // Sử dụng $set để cập nhật giá trị mới cho câu hỏi tại vị trí index trong mảng questions
+      }, { new: true, runValidators: true });
+  
+      // Kiểm tra xem quiz đã được cập nhật thành công chưa
+      if (!quiz) {
+        return res.status(404).json({ status: 'ERR', message: 'Quiz not found' });
+      }
+  
+      // Trả về kết quả thành công
+      return res.status(200).json({ status: 'Success', data: { quiz } });
+    } catch (error) {
+      return res.status(500).json({
+        status: 'ERR',
+        message: error.message || 'Internal server error'
+      });
+    }
+  }
+  
 
+exports.addOneQuestion = async (req, res, next) => {
+    try {
+        // Trích xuất quizId từ yêu cầu
+        const { quizId, answers, correctAnswer, questionName } = req.body;
+
+        // Kiểm tra xem quizId có tồn tại không
+        if (!quizId) {
+            return res.status(400).json({ status: 'ERR', message: 'Missing quizId' });
+        }
+
+        // Tạo object câu hỏi mới
+        const question = {
+            answers,
+            correctAnswer,
+            questionName
+        };
+
+        // Thêm câu hỏi mới vào mảng questions trong bài trắc nghiệm
+        const quiz = await Quiz.findByIdAndUpdate(quizId, {
+            $push: { questions: question } // Sử dụng $push để thêm câu hỏi mới vào mảng questions
+        }, { new: true, runValidators: true });
+
+        // Kiểm tra xem quiz đã được cập nhật thành công chưa
+        if (!quiz) {
+            return res.status(404).json({ status: 'ERR', message: 'Quiz not found' });
+        }
+
+        // Trả về kết quả thành công
+        return res.status(200).json({ status: 'Success', data: { quiz } });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: error.message || 'Internal server error'
+        });
+    }
+}
 //Delete one  quiz
 exports.deleteOneQuiz = async (req,res,next)=>{
     try{
@@ -387,30 +407,32 @@ exports.deleteOneQuiz = async (req,res,next)=>{
     }
 }
 
-exports.getDetailsQuiz = async (req, res, next) => {
+//Delete one  quuestion
+// router.js hoặc quizController.js
+
+exports.deleteOneQuestion = async (req, res) => {
     try {
-        
-        const quizId = req.query.id;
-
-        const quiz = await Quiz.findOne(quizId).populate('author questions');
-
-        const numberOfQuestions = await Question.countDocuments({ quizId: quiz._id });
-            
-
-        res.status(200).json({
-            status: 'getDetailsQuiz success',
-            author:quiz.author.name,
-            title: quiz.title,
-            avatar: quiz.avatar,
-            ranking: quiz.ranking,
-            numberOfQuestions: numberOfQuestions,
-            data: quiz
-        });
-        
+      const { quizId, questionId } = req.body;
+  
+      if (!quizId || !questionId) {
+        return res.status(400).json({ status: 'ERR', message: 'Missing quizId or questionId' });
+      }
+  
+      const quiz = await Quiz.findByIdAndUpdate(
+        quizId,
+        { $pull: { questions: { _id: questionId } } },
+        { new: true }
+      );
+  
+      if (!quiz) {
+        return res.status(404).json({ status: 'ERR', message: 'Quiz not found' });
+      }
+  
+      res.status(200).json({ status: 'Success', data: { quiz } });
     } catch (error) {
-        return res.status(500).json({
-            status: 'ERR',
-            message: error.message || 'Internal server error'
-        });
+      res.status(500).json({ status: 'ERR', message: error.message });
     }
-}
+  };
+  
+  
+  

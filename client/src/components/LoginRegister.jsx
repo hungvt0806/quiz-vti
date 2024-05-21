@@ -60,16 +60,16 @@ const LoginRegister = () => {
         navigate("/homepage");
              
          } catch (error) {  
-          setErrorMessage(error.response.data.status)
+          toast.error(error)
         }
        };
 
   return (
     <div className="containerAuthor">
     <div className="form signup">
-      {errorMessenge &&(
+      {/* {errorMessenge &&(
         <div className='error-message'>Error: {errorMessenge}</div>
-      )}
+      )} */}
       <h2>{state}</h2>
       {state ==="Sign Up" ? <div className="inputBox">
       <input name='name'value={formData.name} onChange={changeHandler} type="text" required="required" />
