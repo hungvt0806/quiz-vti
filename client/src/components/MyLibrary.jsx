@@ -91,7 +91,7 @@ getAllMyQuizzes();
         {allQuizzes.map((quiz,index)=> {
   return (
     <div key={index} className="w-[800px] h-[115px] bg-white flex relative bg-clip-border rounded-xl p-2 shadow-md">
-      <TbMessageQuestion className="w-[95px] h-[95px] bg-blue-600 rounded-xl" />
+      <img src={quiz?.imgUrl} alt="quizImage" className="w-[95px] h-[95px]  rounded-xl" />
       <div className="ml-5 mt-1 w-full">
 
         <div className='flex justify-between items-center'>

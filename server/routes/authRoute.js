@@ -2,12 +2,14 @@ const express = require ('express');
 const {login, loadImage} = require('../controllers/authController');
 const{register}= require('../controllers/authController');
 const{getDetailsUser}= require('../controllers/authController');
+const{updateAvatar}= require('../controllers/authController');
 const { verifyToken } = require('../middleware/verifyToken');
 const Router = express.Router();
 
 Router.route('/register').post(register);
 Router.route('/login').post(login);
 Router.route('/:id').get( verifyToken, getDetailsUser);
+Router.route('/update/:id').post( verifyToken, updateAvatar);
 
 // Router.route('/log-out').post( logoutUser)
 // Router.route('/delete-user/:id').delete( authMiddleWare, deleteUser)

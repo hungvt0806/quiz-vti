@@ -9,8 +9,12 @@ const authService = {
     },
     getUserDetails(id){
         return api.get(`auth/${id}`);
-
+    },
+    update(id, avatarUrl){
+        return api.post(`auth/update/${id}`, { avatar: avatarUrl });
     }
+    
+
 };
 
 export default authService;

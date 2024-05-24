@@ -42,7 +42,17 @@ const upload = multer({storage:storage})
 //Creating upload Endpoint for image
 app.use('/images',express.static('upload/images'))
 
-app.post("/upload",upload.single('product'),(req,res)=>{
+
+
+app.post("/api/v1/upload",upload.single('quiz'),(req,res)=>{
+
+  res.json({
+      success: 1,
+      image_url:`http://localhost:${port}/images/${req.file.filename}`
+  })
+})
+
+app.post("/api/v1/uploadAvatar",upload.single('avatar'),(req,res)=>{
 
   res.json({
       success: 1,

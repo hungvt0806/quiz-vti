@@ -1,4 +1,4 @@
-export const initialState = {user: null, quizzes:[],questionId: null};
+export const initialState = {user: null, quizzes:[],questionId: null, avatar: null};
 
 
 export default function AppReducer( state, action ) {
@@ -6,6 +6,8 @@ export default function AppReducer( state, action ) {
     switch (action.type) {
       case "CURRENT_USER":
             return { ...state,user: action.payload };
+      case "UPDATE_AVATAR":
+            return { ...state,avatar: action.payload };
       case "GET_ALL_QUIZZES":
             return { ...state,user: action.payload };
       case "GET_ALL_MY_QUIZZES":

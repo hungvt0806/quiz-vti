@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MyHeader from '../../components/MyHeader'
 import MySidebar from '../../components/MySidebar'
 import Profile from '../../components/Profile'
@@ -6,13 +6,16 @@ import './Profile.css';
 
 
 const ProfilePage = () => {
+ 
+  
   return (
     <div className='w-full h-[100vh] flex '>
-    <MySidebar/>
+     <MySidebar  />
     <div className='w-full h-full'>
    <MyHeader/>
    <div className='w-full h-[calc(100vh-50px)] '>
-   <Profile/>
+   <Profile  />
+
     </div>
     </div>
    </div>

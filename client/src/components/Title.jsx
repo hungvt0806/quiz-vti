@@ -38,7 +38,7 @@ const Title = ({ toggleQuestion, toggleComment }) => {
   <div className='flex-col flex '>
         <div className='flex items-center  flex-col'>
           <div className='flex items-end'>
-        <TbMessageQuestion className="w-[50px] h-[50px]  bg-blue-600 rounded-xl mt-2 justify-center" />
+        <img src={quizzes?.imgUrl} alt="quizImage" className="w-[50px] h-[50px]  rounded-xl mt-2 justify-center" />
         <button onClick={()=>getQuizDetail(quizzes?._id)} className=" hover:text-blue-500  py-1 px-2 rounded ml-auto inline-flex items-center">
           
               <FaPencilAlt className="ml-2" />

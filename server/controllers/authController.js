@@ -81,5 +81,24 @@ exports.getDetailsUser = async (req, res,next) => {
     }
 }
 
+exports.updateAvatar = async (req, res, next) => {
+    const { id } = req.params;
+  const { avatar } = req.body;
+
+  try {
+    const user = await User.findByIdAndUpdate(id, { avatar }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ message: 'Avatar updated successfully', user });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+  }
+  
+
+
 
 

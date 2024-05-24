@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import React, { useState ,useContext} from 'react'
+import React, { useState ,useContext, useReducer} from 'react'
 import avatarUser from '../assets/avatarUser.png';
 import logo from '../assets/logo.png';
 import { TinyColor } from '@ctrl/tinycolor';
@@ -18,9 +18,12 @@ const getActiveColors = (colors) =>
 
 const MySidebar = () => {
   const {state,dispatch} = useStateValue();
-  const {user,quizzes,questionId} = state;
+  const {user,quizzes,avatar} = state;
 
   const navigate = useNavigate();
+
+  
+  
 
   const sigOut =() =>{
     localStorage.removeItem("token");
@@ -28,12 +31,15 @@ const MySidebar = () => {
   }
 
 
-  const [isUpLoad,setIsUpLoad] = useState(false);
+
+  
+  
+
   const [isVisbleModal,setIsVisibleModal] = useState(false);
 
 
-  const userDetailString = localStorage.getItem('userDetail');
-  const avatar = localStorage.getItem('avatar');
+  // const userDetailString = localStorage.getItem('userDetail');
+  // const avatar = localStorage.getItem('avatar');
 
   
   const defaultQuiz = {
@@ -81,7 +87,7 @@ const MySidebar = () => {
             <div className='profile flex justify-center items-center text-center p-5'>
                 <div className='text-center'>
                   <div className='flex items-end'>
-                  <img src={avatarUser} alt="Avatar" className="rounded-full w-24 h-24 mr-0 mb-2" />
+                  <img src={avatar?avatar:avatarUser} alt="Avatar" className="rounded-full w-24 h-24 mr-0 mb-2" />
 
                 <Link to ="/profile">
                   <CameraOutlined className='mb-4 ml-0 cursor-pointer'/>

@@ -28,6 +28,9 @@ const quizService = {
     delete(id) {
         return api.delete(`/quizzes/delete/${id}`);
     },
+    uploadImage(body){
+        return api.post(`/upload`,body)
+    }
 };
 
 export default quizService;
