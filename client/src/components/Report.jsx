@@ -1,7 +1,11 @@
 import { Checkbox, Progress, Select } from 'antd';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaSort } from "react-icons/fa";
 import { DeleteOutlined} from "@ant-design/icons"
+import { useStateValue } from '../contex/AppContext';
+import { toast } from 'react-toastify';
+import authService from '../services/authService';
+import quizService from '../services/quizService';
 
 
 const handleChange = (value) => {
@@ -10,6 +14,44 @@ const handleChange = (value) => {
 
 
 export default function Report() {
+
+  const {state,dispatch} = useStateValue();
+
+  const {user,quizzes} = state;
+  const [allUsers, setAllUers] = useState([]);
+  const [allQuizzes, setAllQuizzes] = useState([]);
+  const [scores, setScores] = useState(); 
+  const getUsers = async() =>{
+
+    try {
+      console.log("getAllUser function executed");
+      const response = await authService.getAllUsers();   
+      console.log("response allUsers la :",response.data.data);
+      setAllUers(response.data.data);
+      
+} catch (error) {
+      toast.error(error)}
+}
+useEffect(()=>{ 
+getUsers();
+  },[])
+
+  const getQuizzes = async() =>{
+
+    try {
+      console.log("getAllQuizzes function executed");
+      const response = await quizService.getAll();   
+      console.log("response all quizzes la :",response.data);
+      setAllQuizzes(response.data.data.quizzes);
+      setScores(response.data.sumScore);
+} catch (error) {
+      toast.error(error)}
+}
+useEffect(()=>{ 
+getQuizzes();
+  },[])
+
+
   return (
     <div className=' w-full h-full bg-gray-100 p-4 flex-col items-center '>
 
@@ -38,7 +80,7 @@ export default function Report() {
                     </div>
                     <div className="h-50 ml-4 flex w-auto flex-col justify-center">
                     <p className="font-dm text-sm font-medium text-gray-600">Total Account</p>
-                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">1,000</h4>
+                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">{allUsers?.length}</h4>
                     </div>
                 </div>
                 <div className="relative flex flex-grow !flex-row  items-center rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
@@ -63,7 +105,7 @@ export default function Report() {
                     </div>
                     <div className="h-50 ml-4 flex w-auto flex-col justify-center">
                     <p className="font-dm text-sm font-medium text-gray-600">Total Quizzes</p>
-                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">145</h4>
+                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">{allQuizzes?.length}</h4>
                     </div>
                 </div>
                 <div className="relative flex flex-grow !flex-row items-center  rounded-[10px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none">
@@ -87,7 +129,7 @@ export default function Report() {
                     </div>
                     <div className="h-50 ml-4 flex w-auto flex-col justify-center">
                     <p className="font-dm text-sm font-medium text-gray-600">Take Quiz</p>
-                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">2433</h4>
+                    <h4 className="text-xl font-bold text-navy-700 dark:text-white">{scores}</h4>
                     </div>
                 </div>
                 </div> 
@@ -108,7 +150,7 @@ export default function Report() {
                 <h2 className="text-gray-500 text-lg font-semibold pb-4">Accounts Table </h2>
 
                 <Select
-      defaultValue="This month"
+      defaultValue="All Time"
       style={{
         width: 120,
       }}
@@ -151,7 +193,7 @@ export default function Report() {
                 <table className="w-full table-auto text-sm">
                     <thead>
                     <tr className="text-sm leading-normal">
-                            <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined/></th>
+                            <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined className=' hover:text-red-500 '/></th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Avatar</th>
                             <th className="w-1/4 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">User</th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
@@ -162,9 +204,12 @@ export default function Report() {
                                 </th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
                             <div className='flex items-center justify-center'>
-                            <span>Role</span> 
-                            <button><FaSort /></button>
-                            </div>
+                <select value="" onChange="" name='role' className='add-product-selector box-border  w-[120px] h-[30px]  rounded-md pl-3 border border-gray-300 outline-none text-gray-700 text-sm'>
+                    <option value="all">All Account</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+                    </div>
                             </th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
                             <div className='flex items-center justify-center'>
@@ -187,21 +232,30 @@ export default function Report() {
                         </tr>
 
                     </thead>
+                    
                     <tbody>
-                        <tr className="hover:bg-grey-lighter">
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center"><Checkbox  onChange=""/></td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center pl-10"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv7u1VqKR_kUYREhpogSoo4NCya9Nbz1r7mQ&s" alt="Foto Perfil" className="rounded-full h-10 w-10"/></td>
-                            <td className="w-1/4 py-2 px-4 border-b border-grey-light text-center">Juan Pérez</td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">April-30</td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">User</td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">35</td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">40</td>
-                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">
-                            <Progress type="circle" percent={30} size={40} />
-                            </td>
-                        </tr>
-                       
-                        
+                    {allUsers && Array.isArray(allUsers) && allUsers.map((user,index)=> {
+    const createdAt = new Date(user.createdAt);
+    const day = createdAt.getDate();
+    const month = createdAt.getMonth() + 1;
+    const year = createdAt.getFullYear();
+    const formattedDate = `${year}/${month}/${day}`;
+    return(
+        <tr key={index} className="hover:bg-grey-lighter">
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center"><Checkbox  onChange=""/></td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center pl-10"><img src={user.avatar} alt="avatar" className="rounded-full h-10 w-10"/></td>
+            <td className="w-1/4 py-2 px-4 border-b border-grey-light text-center">{user.name}</td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{formattedDate}</td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{user.isAdmin?"Admin":"User"}</td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{user.quizCount}</td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{user.scoreCount}</td>
+            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">
+            <Progress type="circle" percent={30} size={40} />
+            </td>
+        </tr>
+       
+    )})}
+
                     </tbody>
                     </table>
                     
@@ -213,7 +267,7 @@ export default function Report() {
                      <div className='flex items-center justify-between'>
     <h2 className="text-gray-500 text-lg font-semibold pb-4">Quizzes Table</h2>
     <Select
-      defaultValue="This month"
+      defaultValue="All Time"
       style={{
         width: 120,
       }}
@@ -257,7 +311,7 @@ export default function Report() {
     <table className="w-full table-auto text-sm">
         <thead>
             <tr className="text-sm leading-normal">
-                <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined/></th>
+                <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined className=' hover:text-red-500 '/></th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Image</th>
                 <th className="w-1/4 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Title</th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
@@ -302,18 +356,25 @@ export default function Report() {
             </tr>
         </thead>
         <tbody>
-            <tr className="hover:bg-grey-lighter">
+        { allQuizzes && Array.isArray(allQuizzes) && allQuizzes.map((quiz,index)=> {
+          const createdAt = new Date(quiz.createdAt);
+          const day = createdAt.getDate();
+          const month = createdAt.getMonth() + 1;
+          const year = createdAt.getFullYear();
+          const formattedDate = `${year}/${month}/${day}`;
+          return(
+            <tr key={index} className="hover:bg-grey-lighter">
                 <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center"><Checkbox  onChange=""/></td>
-                <td className="w-1/8 py-2 pl-10 px-4 border-b border-grey-light text-center"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBBe7xC4qeoclB8mxE8VeWi6ZPRBQsILZDRA&s" alt="Foto Perfil" className="rounded-lg h-10 w-10"/></td>
-                <td className="w-1/4 py-2 px-4 border-b border-grey-light text-left font-bold">This is my first quiz</td>
-                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">hungvu</td>
-                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">football</td>
-                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">50</td>
-                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">35</td>
-                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">100</td>
+                <td className="w-1/8 py-2 pl-10 px-4 border-b border-grey-light text-center"><img src={quiz.imgUrl} alt="Foto Perfil" className="rounded-lg h-10 w-10"/></td>
+                <td className="w-1/4 py-2 px-4 border-b border-grey-light text-left font-bold">{quiz.title}</td>
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{quiz.createdBy.name}</td>
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{quiz.category}</td>
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{quiz?.scoreCount}</td>
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{quiz?.comments?.length}</td>
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">{quiz.likes}</td>
             </tr>
            
-            
+          )})}
         </tbody>
     </table>
     

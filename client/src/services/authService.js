@@ -12,7 +12,10 @@ const authService = {
     },
     update(id, avatarUrl){
         return api.post(`auth/update/${id}`, { avatar: avatarUrl });
-    }
+    },
+    getAllUsers(){
+        return api.get(`auth/user/all`);
+    },
     
 
 };

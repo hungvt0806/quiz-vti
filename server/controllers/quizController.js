@@ -1,7 +1,7 @@
 const Quiz = require('../models/QuizModel');
 const User = require('../models/UserModel');
 const Score = require('../models/ScoresModel');
-
+const mongoose = require('mongoose');
 
 //create one  quiz
 exports.createOneQuiz = async (req,res,next)=>{
@@ -96,6 +96,51 @@ exports.getAllMyQuizzes = async (req, res, next) => {
 
 exports.getAllQuizzes = async (req,res,next)=>{
     try{
+        
+        
+
+        const quizzes = await Quiz.find()
+        .populate({
+            path: 'createdBy',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ createdBy
+          })
+          .populate({
+            path: 'comments.sentFromId',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ sentFromId
+          }); // Giới hạn số lượng phần tử trả về
+
+        // Tạo mảng các promises để lấy số lượng câu hỏi trong mỗi bài quiz
+        const promises = quizzes.map(async (quiz) => {
+            const questionCount = quiz.questions.length;
+            const scoreCount = await Score.countDocuments({ quizId: quiz._id });
+            return { ...quiz.toObject(), questionCount ,scoreCount};
+            });
+
+            // Chờ tất cả các promises hoàn thành
+        const quizzesWithQuestionCount = await Promise.all(promises);
+        const sumScore = quizzesWithQuestionCount.reduce((total, quiz) => total + (quiz.scoreCount || 0), 0);
+
+
+        res.status(200).json({
+            status: 'success',
+            sumScore:sumScore,
+            results: quizzesWithQuestionCount.length,
+            data: { quizzes: quizzesWithQuestionCount }
+        
+                });
+                
+
+        
+    }catch (error){
+        return res.status(500).json({
+            status: 'ERR',
+            message: error.message || 'Internal server error'
+    });
+    }
+}
+
+exports.getAllQuizzes_Full = async (req,res,next)=>{
+    try{
         const page = parseInt(req.query.page) || 1; // Số trang mặc định là 1 nếu không có truy vấn
         const limit = parseInt(req.query.limit) || 20; // Số lượng phần tử trên mỗi trang, mặc định là 10
         const sortBy = req.query.sortBy || 'category'; // Trường để sắp xếp, mặc định là 'createdAt'
@@ -149,6 +194,8 @@ exports.getAllQuizzes = async (req,res,next)=>{
     });
     }
 }
+
+
 
 exports.getQuizDetails = async (req,res,next)=>{
     try{
@@ -245,29 +292,37 @@ exports.addLike = async (req,res,next)=>{
 }
 
 
-exports.addResult = async (req,res,next)=>{
-    try{
-        let score = new Score({
-            userId: req.body.currentUser,
-            answers: req.body.answers,
-            quizId: req.body.quizId
-        });
-        score.save().then(async resp => {
-            await Quiz.updateOne({ _id: req.body.quizId }, {
-                $push: {
-                    scores: resp._id
-                }
-            });
-            res.status(200).json({scoreId: resp._id});
-        })
-        
-    }catch (error){
-        return res.status(500).json({
-            status: 'ERR',
-            message: error.message || 'Internal server error'
+exports.addResult = async (req, res, next) => {
+    try {
+    // Chuyển đổi chuỗi thành ObjectId
+
+     const quizId = mongoose.Types.ObjectId.createFromHexString(req.body.quizId);
+    // Tạo một bản ghi mới trong bảng Score
+    let score = new Score({
+        userId: req.body.currentUser,
+        answers: req.body.answers,
+        quizId: quizId
     });
-    }
+
+    // Lưu bản ghi Score vào cơ sở dữ liệu
+    score.save().then(async resp => {
+        // Thêm _id của bản ghi Score vào mảng scores của bản ghi Quiz
+        await Quiz.updateOne({ _id: quizId }, {
+            $push: {
+              scores: resp._id
+            }
+          });
+        res.status(200).json({ scoreId: resp._id });
+    });
+
+} catch (error) {
+    return res.status(500).json({
+        status: 'ERR',
+        message: error.message || 'Internal server error'
+    });
 }
+        }
+
 
 //tim bai lam cos scoreId
 exports.getResultByScoreId = async (req,res,next)=>{
@@ -431,7 +486,7 @@ exports.deleteOneQuiz = async (req,res,next)=>{
 //Delete one  quuestion
 // router.js hoặc quizController.js
 
-exports.deleteOneQuestion = async (req, res) => {
+exports.deleteOneQuestion = async (req, res,next) => {
     try {
       const { quizId, questionId } = req.body;
   
@@ -454,6 +509,50 @@ exports.deleteOneQuestion = async (req, res) => {
       res.status(500).json({ status: 'ERR', message: error.message });
     }
   };
+
+
+  
+  
+exports.getMyDashBoard = async (req, res, next) => {
+    try {
+      const userId = req.params.userId; // Assuming the userId is provided in the request parameters
+  
+      const scores = await Score.find(userId)
+        .populate('quizId')
+  
+      res.status(200).json({
+        status: 'success',
+        results: scores.length,
+        data: { scores },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 'ERR',
+        message: error.message || 'Internal server error',
+      });
+    }
+  }; 
+
+
+exports.deleteScores = async (req, res, next) => {
+    try {
+        const { scoreId } = req.body;
+    
+        // Remove leading space from the _id values
+        const formattedScoreIds = scoreId.map((id) => id.trim());
+    
+        // Perform the deletion operation using the formattedScoreIds array
+        await Score.deleteMany({ _id: { $in: formattedScoreIds } });
+    
+        res.status(200).json({ message: 'Scores deleted successfully' });
+      } catch (error) {
+        console.error('Error deleting scores:', error);
+        res.status(500).json({ error: 'An error occurred while deleting scores' });
+      }
+    };
+  
+
+  
   
   
   

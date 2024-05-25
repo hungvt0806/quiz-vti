@@ -45,10 +45,10 @@ const quizSchema = new Schema({
         type: Number,
         default: 0
     },
-    scores: {
-        type: [Number],
-        default: []
-    },
+    scores: [{
+         type: Schema.Types.ObjectId,
+          ref: 'Score'
+     }],
     deleted: {
         type: Boolean,
         default: false

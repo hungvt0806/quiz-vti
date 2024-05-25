@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const ScoreSchema = new Schema({
     quizId: {
-        type: Schema.Types.ObjectID,
+        type: Schema.Types.ObjectId,
+        ref: 'Quiz',
         required: true
     },
     answers: {
@@ -12,6 +13,7 @@ const ScoreSchema = new Schema({
     },
     userId: {
         type: Schema.Types.ObjectID,
+        ref:'Uer',
         required: true
     },
     createdAt: {

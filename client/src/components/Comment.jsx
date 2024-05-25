@@ -53,7 +53,13 @@ dispatch({ type: "UPDATE_COMMENT",payload: res.data.quiz.comments.length});
         <section className="w-full rounded-lg border-2 border-purple-600 p-4 my-8 mx-auto max-w-xl h-[500px] ">
             <h3 className="font-os text-lg font-bold">Comments</h3>
             <div ref={commentContainerRef} className="overflow-y-auto overflow-x-hidden h-5/6">
-            {allComments?.map((comment, index) => (
+            {allComments?.map((comment, index) => {
+                const createdAt = new Date(comment.posted);
+                const day = createdAt.getDate();
+                const month = createdAt.getMonth() + 1;
+                const year = createdAt.getFullYear();
+                const formattedDate = `${year}/${month}/${day}`;
+                return(
                 <div key={index} className="flex mt-4">
                     <div className="w-14 h-14 rounded-full bg-purple-400/50 flex-shrink-0 flex items-center justify-center">
                         <img className="h-12 w-12 rounded-full object-cover" src={comment?.sentFromId?.avatar} alt="" />
@@ -61,11 +67,11 @@ dispatch({ type: "UPDATE_COMMENT",payload: res.data.quiz.comments.length});
 
                     <div className="ml-3">
                         <div className="font-medium text-purple-800">{comment?.sentFromId?.name}</div>
-                        <div className="text-gray-600">Posted on {comment?.posted}</div>
+                        <div className="text-gray-600">Posted on {formattedDate}</div>
                         <div className="mt-2 text-purple-800">{comment?.message}</div>
                     </div>
                 </div>
-            ))}
+            )})}
             </div>
 
             <form className="mt-4" onSubmit={handlePostComment}>

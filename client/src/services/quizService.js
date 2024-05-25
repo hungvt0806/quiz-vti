@@ -1,11 +1,14 @@
 import api from './axiosClient';
 
 const quizService = {
-    getAll(params){
-        return api.get("/quizzes",params);
+    getAll(){
+        return api.get("/quizzes/all-quizzes");
     },
     getAllMyQuizzes(createdBy,page){
         return api.get(`/quizzes/my-quizzes/${createdBy}?page=${page}`);
+    },
+    getMyDashBoard(userId){
+        return api.get(`/quizzes/my-dashboard/${userId}`);
     },
     getQuizDetails(quizId){
         return api.get(`/quizzes/get-quiz/${quizId}`);
@@ -21,6 +24,9 @@ const quizService = {
     },
     deleteOneQuestion(params, body) {
         return api.delete(`/quizzes/deleteQuestion`, { params, data: body });
+      },
+    deleteScores(body) {
+        return api.delete('/quizzes/deleteScores', body);
       },
     create(body) {
         return api.post("/quizzes/create",body);

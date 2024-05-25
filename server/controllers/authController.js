@@ -2,6 +2,9 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { cloudinary } = require('../config/cloudinary');
+const Quiz = require('../models/QuizModel');
+const Score = require('../models/ScoresModel');
+
 
 exports.register = async (req,res,next) => {
     try{
@@ -97,6 +100,39 @@ exports.updateAvatar = async (req, res, next) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
   }
+  
+  // Route handler
+exports.getAllUsers = async (req, res, next) => {
+    try {
+        // Lấy tất cả người dùng
+        const users = await User.find();
+    
+        // Lặp qua từng người dùng và đếm số lượng bài quiz mà họ đã tạo
+        const usersWithQuizCount = await Promise.all(users.map(async (user) => {
+          // Đếm số lượng bài quiz mà người dùng đã tạo
+          const quizCount = await Quiz.countDocuments({ createdBy: user._id });
+          const scoreCount = await Score.countDocuments({ userId: user._id });
+    
+          // Trả về đối tượng người dùng kèm số lượng bài quiz
+          return {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            quizCount: quizCount,
+            scoreCount: scoreCount,
+            avatar: user.avatar,
+            createdAt: user.createdAt,
+            isAdmin: user.isAdmin
+          };
+        }));
+    
+        // Gửi danh sách người dùng kèm số lượng bài quiz dưới dạng phản hồi JSON
+        res.json({ success: true, data: usersWithQuizCount });
+      } catch (error) {
+        console.error('Failed to retrieve users with quiz count:', error);
+        res.status(500).json({ success: false, message: 'Failed to retrieve users with quiz count' });
+      }
+  };
   
 
 
