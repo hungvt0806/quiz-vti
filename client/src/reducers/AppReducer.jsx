@@ -1,4 +1,5 @@
-export const initialState = {user: null, quizzes:[],questionId: null, avatar: null};
+import avatarUser from '../assets/avatarUser.png';
+export const initialState = {user: null, quizzes:[],questionId: null, avatar:avatarUser,comment:0};
 
 
 export default function AppReducer( state, action ) {
@@ -8,6 +9,8 @@ export default function AppReducer( state, action ) {
             return { ...state,user: action.payload };
       case "UPDATE_AVATAR":
             return { ...state,avatar: action.payload };
+      case "UPDATE_COMMENT":
+            return { ...state,comment: action.payload };
       case "GET_ALL_QUIZZES":
             return { ...state,user: action.payload };
       case "GET_ALL_MY_QUIZZES":

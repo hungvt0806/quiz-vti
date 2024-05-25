@@ -4,8 +4,8 @@ const quizService = {
     getAll(params){
         return api.get("/quizzes",params);
     },
-    getAllMyQuizzes(createdBy){
-        return api.get(`/quizzes/my-quizzes/${createdBy}`);
+    getAllMyQuizzes(createdBy,page){
+        return api.get(`/quizzes/my-quizzes/${createdBy}?page=${page}`);
     },
     getQuizDetails(quizId){
         return api.get(`/quizzes/get-quiz/${quizId}`);
@@ -15,6 +15,9 @@ const quizService = {
     },
     addOneQuestion(body){
         return api.post(`/quizzes/addQuestion`,body);
+    },
+    addComment(body){
+        return api.post(`/quizzes/add-comment`,body);
     },
     deleteOneQuestion(params, body) {
         return api.delete(`/quizzes/deleteQuestion`, { params, data: body });

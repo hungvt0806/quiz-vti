@@ -12,7 +12,7 @@ const TestComponentPage = () => {
     <div className='w-full h-full'>
    <MyHeader/>
    <div className='w-full h-[calc(100vh-50px)] '>
-   <Upload/>
+   <Comment/>
     </div>
     </div>
    </div>

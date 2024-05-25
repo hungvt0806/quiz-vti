@@ -27,22 +27,19 @@ export default function MyLibrary() {
   
   
 
-  const getAllMyQuizzes = async() =>{
+  const getAllMyQuizzes = async(pageNumber) =>{
 
     try {
-      console.log("getAllMyQuiz function executed",user.user._id,page);
-      const response = await quizService.getAllMyQuizzes(user.user._id, {
-        page: page, 
-        limit: PAGE_SIZE
-      });    
-      console.log("response  la :",response.data.currentPage,page);
+      console.log("getAllMyQuiz function executed",user.user._id,pageNumber);
+      const response = await quizService.getAllMyQuizzes(user.user._id, pageNumber);   
+      console.log("response  la :",response.data.currentPage,pageNumber,response.data);
       setAllQuizzes(response.data.data.quizzes);
       setTotalPages(response.data.totalPages);
 } catch (error) {
       toast.error(error)}
 }
 useEffect(()=>{ 
-getAllMyQuizzes();
+getAllMyQuizzes(page);
   },[page])
 
   
@@ -53,6 +50,7 @@ getAllMyQuizzes();
       const response = await quizService.getQuizDetails(quizId);
       console.log('detail la', response.data.quiz); 
       dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.quiz });
+      dispatch({ type: "UPDATE_COMMENT", payload: response.data.quiz.comments.length });
       console.log('details one quiz', state);
       mode=="detail"?navigate("/quizDetails/:quizId"):navigate(`/editQuiz/${quizId}`);
     } catch (error) {

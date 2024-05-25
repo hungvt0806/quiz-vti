@@ -72,9 +72,16 @@ const { state, dispatch } = useStateValue();
         <div className='addproduct-itemfield'>
                 <p>Category :</p>
                 <select value={quizDetails.category} onChange={changeHandler} name='category' className='add-product-selector box-border mb-5 w-full h-[30px]  rounded-md pl-3 border border-gray-300 outline-none text-gray-700 text-sm'>
+                    <option value="all">All Category</option>
                     <option value="math">Toan hoc</option>
                     <option value="science">Khoa hoc</option>
                     <option value="languae">Ngon Ngu</option>
+                    <option value="english">Tieng Anh</option>
+                    <option value="sci_soc">KH_XH</option>
+                    <option value="comp">May Tinh</option>
+                    <option value="career">GD_NgheNghiep</option>
+                    <option value="arts">Nghe Thuat</option>
+                    <option value="health">Suc Khoe</option>
                 </select>
             </div>
         <div className='addproduct-itemfield flex justify-center mb-5'>

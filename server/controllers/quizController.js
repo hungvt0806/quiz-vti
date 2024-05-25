@@ -39,61 +39,60 @@ exports.createOneQuiz = async (req,res,next)=>{
     }
 }
 
-exports.getAllMyQuizzes = async (req,res,next)=>{
-    try{
 
-        const page = parseInt(req.query.page) || 1; // Số trang mặc định là 1 nếu không có truy vấn
-        const limit = parseInt(req.query.limit) || 5; // Số lượng phần tử trên mỗi trang, mặc định là 10
-        const sortBy = req.query.sortBy || 'category'; // Trường để sắp xếp, mặc định là 'createdAt'
-        const sortOrder = req.query.sortOrder || 'asc'; // Hướng sắp xếp, mặc định là 'desc'
-    
 
-        const startIndex = (page - 1) * limit; // Vị trí bắt đầu của trang hiện tại
+exports.getAllMyQuizzes = async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) ||1;
+        const limit = parseInt(req.query.limit) || 5;
+        const sortBy = req.query.sortBy || 'category';
+        const sortOrder = req.query.sortOrder || 'asc';
+
+        const startIndex = (page - 1) * limit;
 
         let filter = {};
-        // Xử lý các tham số filter từ query string của URL (ví dụ: /api/quizzes?type=languae)
         if (req.params.id) {
-            filter.createdBy= req.params.id
+            filter.createdBy = req.params.id;
         }
-        // Các điều kiện filter khác có thể được xử lý tương tự
 
-        const totalQuizzes = await Quiz.countDocuments(filter); // Tổng số lượng quizzes
-
-        const totalPages = Math.ceil(totalQuizzes / limit); // Tổng số trang
+        const totalQuizzes = await Quiz.countDocuments(filter);
+        const totalPages = Math.ceil(totalQuizzes / limit);
 
         const quizzes = await Quiz.find(filter)
-        .populate('createdBy')
-            .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
-            .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
-            .limit(limit) // Giới hạn số lượng phần tử trả về
-            // .select('title questions category createdBy likes comments');
+        .populate({
+            path: 'createdBy',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ createdBy
+          })
+          .populate({
+            path: 'comments.sentFromId',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ sentFromId
+          })
+            .sort({ [sortBy]: sortOrder })
+            .skip(startIndex)
+            .limit(limit);
 
-        // Tạo mảng các promises để lấy số lượng câu hỏi trong mỗi bài quiz
-const promises = quizzes.map(async (quiz) => {
-    const questionCount = quiz.questions.length;
-    return { ...quiz.toObject(), questionCount };
-});
+        const quizzesWithQuestionCount = await Promise.all(quizzes.map(async (quiz) => {
+            const questionCount = quiz.questions.length;
+            return { ...quiz.toObject(), questionCount };
+        }));
 
-// Chờ tất cả các promises hoàn thành
-const quizzesWithQuestionCount = await Promise.all(promises);
+        const currentPage = Math.min(page, totalPages); // Giữ cho currentPage không vượt quá totalPages
 
-res.status(200).json({
-    status: 'success',
-    results: quizzesWithQuestionCount.length,
-    currentPage: page,
-    totalPages: totalPages,
-    data: { quizzes: quizzesWithQuestionCount }
-
+        res.status(200).json({
+            status: 'success',
+            results: quizzesWithQuestionCount.length,
+            currentPage: currentPage,
+            totalPages: totalPages,
+            data: { quizzes: quizzesWithQuestionCount }
         });
-
-        
-    }catch (error){
+    } catch (error) {
         return res.status(500).json({
             status: 'ERR',
             message: error.message || 'Internal server error'
-    });
+        });
     }
 }
+
 
 exports.getAllQuizzes = async (req,res,next)=>{
     try{
@@ -112,7 +111,14 @@ exports.getAllQuizzes = async (req,res,next)=>{
         const totalPages = Math.ceil(totalQuizzes / limit); // Tổng số trang
 
         const quizzes = await Quiz.find()
-            .populate('createdBy')
+        .populate({
+            path: 'createdBy',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ createdBy
+          })
+          .populate({
+            path: 'comments.sentFromId',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ sentFromId
+          })
             .sort({ [sortBy]: sortOrder }) // Sắp xếp theo trường và hướng đã chỉ định
             .skip(startIndex) // Bỏ qua các phần tử từ vị trí bắt đầu
             .limit(limit); // Giới hạn số lượng phần tử trả về
@@ -147,7 +153,14 @@ exports.getAllQuizzes = async (req,res,next)=>{
 exports.getQuizDetails = async (req,res,next)=>{
     try{
         Quiz.findOne({ _id: req.params.id })
-        .populate('createdBy')
+        .populate({
+            path: 'createdBy',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ createdBy
+          })
+          .populate({
+            path: 'comments.sentFromId',
+            // select: 'name', // Chọn các trường bạn muốn lấy từ sentFromId
+          })
         .then(quiz => {
             res.status(200).json({quiz});
         }).catch(er => {
@@ -162,28 +175,36 @@ exports.getQuizDetails = async (req,res,next)=>{
     }
 }
 
-exports.addComment = async (req,res,next)=>{
-    try{
-        Quiz.updateOne({ _id: req.body.quizId }, {
-            $push: {
-                comments: {
-                    sentFromId: req.body.sentFromId,
-                    message: req.body.message
+exports.addComment = async (req, res, next) => {
+    try {
+        // Parse the request body
+        const { sentFromId, message, quizId } = req.body;
+
+        // Update the quiz document with the new comment
+        Quiz.updateOne(
+            { _id: quizId },
+            {
+                $push: {
+                    comments: {
+                        sentFromId: sentFromId,
+                        message: message
+                    }
                 }
             }
-        }).then(quiz => {
-            res.status(200).json({success: true});
-        }).catch(er => {
-            res.status(500).send(er);
+        )
+        .then(quiz => {
+            res.status(200).json({ success: true });
         })
-        
-    }catch (error){
+        .catch(err => {
+            res.status(500).send(err);
+        });
+    } catch (error) {
         return res.status(500).json({
             status: 'ERR',
             message: error.message || 'Internal server error'
-    });
+        });
     }
-}
+};
 
 exports.addLike = async (req,res,next)=>{
     try{

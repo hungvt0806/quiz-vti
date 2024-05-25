@@ -1,7 +1,7 @@
-import { Progress, Select } from 'antd';
+import { Checkbox, Progress, Select } from 'antd';
 import React from 'react'
 import { FaSort } from "react-icons/fa";
-
+import { DeleteOutlined} from "@ant-design/icons"
 
 
 const handleChange = (value) => {
@@ -151,6 +151,7 @@ export default function Report() {
                 <table className="w-full table-auto text-sm">
                     <thead>
                     <tr className="text-sm leading-normal">
+                            <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined/></th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Avatar</th>
                             <th className="w-1/4 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">User</th>
                             <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
@@ -188,6 +189,7 @@ export default function Report() {
                     </thead>
                     <tbody>
                         <tr className="hover:bg-grey-lighter">
+                            <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center"><Checkbox  onChange=""/></td>
                             <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center pl-10"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv7u1VqKR_kUYREhpogSoo4NCya9Nbz1r7mQ&s" alt="Foto Perfil" className="rounded-full h-10 w-10"/></td>
                             <td className="w-1/4 py-2 px-4 border-b border-grey-light text-center">Juan Pérez</td>
                             <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">April-30</td>
@@ -255,6 +257,7 @@ export default function Report() {
     <table className="w-full table-auto text-sm">
         <thead>
             <tr className="text-sm leading-normal">
+                <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light"><DeleteOutlined/></th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Image</th>
                 <th className="w-1/4 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">Title</th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light ">
@@ -263,9 +266,19 @@ export default function Report() {
                     </div>
                     </th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light  ">
-                    <div className='flex items-center justify-center'>
-                    <span>Category</span> 
-                    <button><FaSort /></button>
+                <div className='flex items-center justify-center'>
+                <select value="" onChange="" name='category' className='add-product-selector box-border  w-[140px] h-[30px]  rounded-md pl-3 border border-gray-300 outline-none text-gray-700 text-sm'>
+                    <option value="all">All Category</option>
+                    <option value="math">Toan hoc</option>
+                    <option value="science">Khoa hoc</option>
+                    <option value="languae">Ngon Ngu</option>
+                    <option value="english">Tieng Anh</option>
+                    <option value="sci_soc">KH_XH</option>
+                    <option value="comp">May Tinh</option>
+                    <option value="career">GD_NgheNghiep</option>
+                    <option value="arts">Nghe Thuat</option>
+                    <option value="health">Suc Khoe</option>
+                </select>
                     </div>
                     </th>
                 <th className="w-1/8 py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light  ">
@@ -290,6 +303,7 @@ export default function Report() {
         </thead>
         <tbody>
             <tr className="hover:bg-grey-lighter">
+                <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center"><Checkbox  onChange=""/></td>
                 <td className="w-1/8 py-2 pl-10 px-4 border-b border-grey-light text-center"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBBe7xC4qeoclB8mxE8VeWi6ZPRBQsILZDRA&s" alt="Foto Perfil" className="rounded-lg h-10 w-10"/></td>
                 <td className="w-1/4 py-2 px-4 border-b border-grey-light text-left font-bold">This is my first quiz</td>
                 <td className="w-1/8 py-2 px-4 border-b border-grey-light text-center">hungvu</td>

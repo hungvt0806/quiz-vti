@@ -14,9 +14,9 @@ import { toast } from 'react-toastify';
 const Title = ({ toggleQuestion, toggleComment }) => {
 
   const {state,dispatch} = useStateValue();
-  const {quizzes} = state;
+  const {quizzes,comment} = state;
   const navigate = useNavigate();
-    console.log('title la', quizzes?.questions);
+    console.log('title comment la', quizzes?.questions, comment);
 
     const getQuizDetail = async (quizId) => {
       try {
@@ -24,6 +24,7 @@ const Title = ({ toggleQuestion, toggleComment }) => {
         const response = await quizService.getQuizDetails(quizId);
         console.log('detail la', response.data.quiz); 
         dispatch({ type: "GET_DETAILS_ONE_QUIZ", payload: response.data.quiz });
+        dispatch({ type: "UPDATE_COMMENT", payload: response.data.quiz.comments.length });
         console.log('details one quiz', state);
         navigate(`/editQuiz/${quizId}`);
       } catch (error) {
@@ -79,7 +80,7 @@ const Title = ({ toggleQuestion, toggleComment }) => {
           <button className=" hover:text-green-600  py-1 px-2 rounded ml-auto inline-flex items-center" onClick={toggleComment}>
             
             <CommentOutlined />
-            <p className='pl-2 pr-5'>{quizzes?.comments.length}</p> 
+            <p className='pl-2 pr-5'>{ comment}</p> 
             
           </button>
           
@@ -100,3 +101,7 @@ const Title = ({ toggleQuestion, toggleComment }) => {
 }
 
 export default Title;
+
+
+
+

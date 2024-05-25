@@ -21,12 +21,15 @@ const MySidebar = () => {
   const {user,quizzes,avatar} = state;
 
   const navigate = useNavigate();
+  console.log("user la",user)
 
   
   
 
   const sigOut =() =>{
     localStorage.removeItem("token");
+    dispatch({type: "UPDATE_AVATAR", payload: null})
+    dispatch({type: "UPDATE_COMMENT", payload: null})
     dispatch({type: "CURRENT_USER", payload: null})
   }
 
@@ -87,7 +90,7 @@ const MySidebar = () => {
             <div className='profile flex justify-center items-center text-center p-5'>
                 <div className='text-center'>
                   <div className='flex items-end'>
-                  <img src={avatar?avatar:avatarUser} alt="Avatar" className="rounded-full w-24 h-24 mr-0 mb-2" />
+                  <img src={avatar!=null?avatar:avatarUser} alt="Avatar" className="rounded-full w-24 h-24 mr-0 mb-2" />
 
                 <Link to ="/profile">
                   <CameraOutlined className='mb-4 ml-0 cursor-pointer'/>
@@ -96,7 +99,7 @@ const MySidebar = () => {
                
               
                     <h5 className='text-xl font-medium leading-tight mb-2'>{user.user.name}</h5>
-                    <p className='text-gray-600'>{user.isAdmin==true?"Admin":"User"}</p>
+                    <p className='text-gray-600'>{user.user.isAdmin==true?"Admin":"User"}</p>
                 </div>
             </div>
             <div className='flex justify-center py-2'>
@@ -146,21 +149,23 @@ const MySidebar = () => {
             </div>
 
 
-            
-            <div className="py-3 cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300">
-                <Link to="/adminpage" className="px-7 flex space-x-2">
-                <FormOutlined />
-                <span>Report</span>
-                </Link>
-            </div>
+            {user.user.isAdmin && (
+  <>
+    <div className="py-3 cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300">
+      <Link to="/adminpage" className="px-7 flex space-x-2">
+        <FormOutlined />
+        <span>Report</span>
+      </Link>
+    </div>
 
-            <div className="py-3 cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300">
-                <Link to="/test" className="px-7 flex space-x-2">
-                <FormOutlined />
-                <span>TestComponent</span>
-                </Link>
-            </div>
-            
+    <div className="py-3 cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300">
+      <Link to="/test" className="px-7 flex space-x-2">
+        <FormOutlined />
+        <span>TestComponent</span>
+      </Link>
+    </div>
+  </>
+)}
             
 
             <div className="py-3  cursor-pointer text-gray-600 hover:text-white hover:bg-gray-300" >

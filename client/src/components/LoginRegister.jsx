@@ -37,6 +37,7 @@ const LoginRegister = () => {
         console.log("response  la :",response.data.data);
         localStorage.setItem('token',token);
         localStorage.setItem('userId',user._id)
+        dispatch({type: "UPDATE_AVATAR", payload: user.avatar})
         dispatch({type:"CURRENT_USER",payload: {user}}); 
         toast.success("Wellcome");     
         navigate("/homepage");
@@ -55,6 +56,7 @@ const LoginRegister = () => {
         console.log("response  la :",response.data.data);
         localStorage.setItem('token',token);
         localStorage.setItem('userId',user._id)
+        dispatch({type: "UPDATE_AVATAR", payload: user.avatar})
         dispatch({type:"CURRENT_USER",payload: {user}}); 
         toast.success("Wellcome");     
         navigate("/homepage");

@@ -7,6 +7,12 @@ const questionSchema = new Schema({
     questionName: { type: String, required: true }
 });
 
+const commentSchema = new Schema({
+    sentFromId: { type: Schema.Types.ObjectId, ref: 'User' },
+    message: { type: String },
+    posted: { type: Date, default: Date.now } // Add posted field to each comment
+  });
+
 const quizSchema = new Schema({
     title: {
         type: String,
@@ -30,10 +36,7 @@ const quizSchema = new Schema({
         type: String,
         required: false
     },
-    comments: [{
-        sentFromId: { type: Schema.Types.ObjectId },
-        message: { type: String }
-    }],
+    comments: [commentSchema],
     views: {
         type: Number,
         default: 0
